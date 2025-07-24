@@ -300,6 +300,7 @@ void VTASwapChain::createFramebuffers() {
 
 void VTASwapChain::createDepthResources() {
   VkFormat depthFormat = findDepthFormat();
+  swapChaindepthFormat = depthFormat;
   VkExtent2D swapChainExtent = getSwapChainExtent();
 
   depthImages.resize(imageCount());

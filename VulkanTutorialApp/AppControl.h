@@ -1,9 +1,8 @@
 #pragma once
 
 #include "VTA_Window.h"
-#include "VTA_pipeline.h"
 #include "VTA_device.hpp"
-#include "VTA_swap_chain.hpp"
+#include "VTA_renderer.h"
 #include "VTA_model.h"
 #include "VTA_game_object.h"
 
@@ -29,22 +28,11 @@ namespace VTA
 	private:
 
 		void loadGameObjects();
-		void createPipelineLayout();
-		void createPipeline();
-		void freeCommandBuffers();
-		void createCommandBuffers();
-		void drawFrame();
-		void recordCommandBuffer(int imageIndex);
-		void recreateSwapChain();
-		void renderGameObjects(VkCommandBuffer commandBuffer);
 
 
 		VTAWindow window{ WIDTH, HEIGHT, "Vulkan Window" };
 		VTADevice device{ window };
-		std::unique_ptr<VTASwapChain> swapChain;
-		std::unique_ptr<VTAPipeline> pipeline;
-		VkPipelineLayout pipelineLayout;
-		std::vector<VkCommandBuffer> commandBuffers;
+		VTARenderer renderer{ window, device };
 		std::vector<VTAGameObject> gameObjects;
 	};
 }
