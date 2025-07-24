@@ -1,0 +1,11 @@
+/VulkanTutorialApp/**
+
+!/VulkanTutorialApp/**/
+
+/VulkanTutorialApp/**/*.h
+/VulkanTutorialApp/**/*.hpp
+/VulkanTutorialApp/**/*.cpp
+
+!/VulkanTutorialApp/**/*.h
+!/VulkanTutorialApp/**/*.hpp
+!/VulkanTutorialApp/**/*.cpp
