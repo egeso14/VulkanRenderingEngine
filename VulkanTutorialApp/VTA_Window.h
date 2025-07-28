@@ -21,12 +21,15 @@ namespace VTA{
 
 		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface); 
 		
+		GLFWwindow* getGLFWwindow() const { return window; }
+
 	private:
 		GLFWwindow* window;
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
 		void initWindow();
 
+		
 		int width;
 		int height;
 		bool framebufferResized = false;

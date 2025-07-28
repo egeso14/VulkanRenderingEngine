@@ -79,8 +79,6 @@ namespace VTA
 
 		for (auto& obj : gameObjects)
 		{
-			obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.0001f, glm::two_pi<float>()); // rotate the object around the y axis
-			//obj.transform.rotation.x = glm::mod(obj.transform.rotation.y + 0.0002f, glm::two_pi<float>()); // rotate the object around the y axis
 
 			SimplePushConstantsData push{};
 			push.color = obj.color; // use the color from the game object

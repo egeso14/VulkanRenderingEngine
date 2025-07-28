@@ -29,7 +29,7 @@ namespace VTA
 
 		void loadGameObjects();
 
-
+		float MAX_FRAME_TIME{ 0.2f };
 		VTAWindow window{ WIDTH, HEIGHT, "Vulkan Window" };
 		VTADevice device{ window };
 		VTARenderer renderer{ window, device };

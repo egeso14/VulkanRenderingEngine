@@ -1,8 +1,10 @@
 #include "AppControl.h"
 #include "simple_render_system.h"
 #include "VTA_camera.h"
+#include "keyboard_movement_controller.h"
 #include <stdexcept>
 #include <array>
+#include <chrono>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // Vulkan expects depth values to be in the range [0, 1]
@@ -30,15 +32,29 @@ namespace VTA
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass() }; // create the render system with the device and the swap chain render pass
         VTACamera camera{};
         //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
-        camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 5.f));
         
+        auto viewerObject = VTAGameObject::createGameObject();
+        KeyboardMovementController cameraController{};
+        
+        camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 5.f));
+        auto currentTime = std::chrono::high_resolution_clock::now();
+
+
 
 		while (!window.shouldClose())
 		{
 			glfwPollEvents();
 			
+            auto newTime = std::chrono::high_resolution_clock::now();
+            float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+            currentTime = newTime;
+
+            frameTime = glm::min(frameTime, MAX_FRAME_TIME);
+
+            cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+            camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+
             float aspect = renderer.getAspectRatio();
-            //camera.setOrtographicProjection(-aspect, aspect, -1, 1, -1, 1);
             
             camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
 
