@@ -67,7 +67,7 @@ namespace VTA
 		std::vector<VkVertexInputAttributeDescription> attributeDescriptions(2);
 		attributeDescriptions[0].binding = 0; // binding number
 		attributeDescriptions[0].location = 0; // location number
-		attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT; // format of the data
+		attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT; // format of the data
 		attributeDescriptions[0].offset = offsetof(Vertex, position); // offset of the data in the vertex structure
 
 		attributeDescriptions[1].binding = 0; // binding number

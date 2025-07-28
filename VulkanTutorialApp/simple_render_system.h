@@ -5,6 +5,7 @@
 #include "VTA_device.hpp"
 #include "VTA_model.h"
 #include "VTA_game_object.h"
+#include "VTA_camera.h"
 
 #include <memory>
 #include <vector>
@@ -22,7 +23,7 @@ namespace VTA
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete; // this is to establish unique ownership of resources
 
-		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VTAGameObject>& gameObjects);
+		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VTAGameObject>& gameObjects, VTACamera &camera);
 
 	private:
 

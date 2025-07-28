@@ -12,8 +12,7 @@ namespace VTA
 {
 	struct SimplePushConstantsData
 	{
-		glm::mat2 transform{ 1.f };
-		glm::vec2 offset;
+		glm::mat4 transform{ 1.f };
 		alignas(16) glm::vec3 color;
 	};
 
@@ -72,16 +71,20 @@ namespace VTA
 
 
 
-	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VTAGameObject>& gameObjects)
+	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VTAGameObject>& gameObjects, VTACamera& camera)
 	{
 		pipeline->bind(commandBuffer); // bind the pipeline to the command buffer
+		auto projectionView = camera.getProjection() * camera.getView(); 
+
 
 		for (auto& obj : gameObjects)
 		{
+			obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.0001f, glm::two_pi<float>()); // rotate the object around the y axis
+			//obj.transform.rotation.x = glm::mod(obj.transform.rotation.y + 0.0002f, glm::two_pi<float>()); // rotate the object around the y axis
+
 			SimplePushConstantsData push{};
-			push.offset = obj.transform2d.translation; // use the translation from the game object transform
 			push.color = obj.color; // use the color from the game object
-			push.transform = obj.transform2d.mat2(); // use the transform from the game object
+			push.transform = projectionView * obj.transform.mat4(); // use the transform from the game object
 
 			vkCmdPushConstants(commandBuffer,
 				pipelineLayout,

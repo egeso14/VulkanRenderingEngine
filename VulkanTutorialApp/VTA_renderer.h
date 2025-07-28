@@ -26,6 +26,8 @@ namespace VTA
 			return swapChain->getRenderPass();
 		}
 
+		float getAspectRatio() const { return swapChain->extentAspectRatio(); }
+
 		bool isFrameUnProgress() { return isFrameStarted; }
 		
 		VkCommandBuffer getCurrentCommandBuffer() const {

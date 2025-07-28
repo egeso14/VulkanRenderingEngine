@@ -1,5 +1,6 @@
 #include "AppControl.h"
 #include "simple_render_system.h"
+#include "VTA_camera.h"
 #include <stdexcept>
 #include <array>
 
@@ -27,15 +28,24 @@ namespace VTA
 	void AppControl::run()
 	{
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass() }; // create the render system with the device and the swap chain render pass
+        VTACamera camera{};
+        //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
+        camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 5.f));
+        
 
 		while (!window.shouldClose())
 		{
 			glfwPollEvents();
 			
+            float aspect = renderer.getAspectRatio();
+            //camera.setOrtographicProjection(-aspect, aspect, -1, 1, -1, 1);
+            
+            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+
 			if (auto commandBuffer = renderer.beginFrame()) // begin the frame and get the command buffer
 			{
 				renderer.beginSwapChainRenderPass(commandBuffer); // begin the render pass for the swap chain
-				simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects); // render the game objects
+				simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera); // render the game objects
 				renderer.endSwapChainRenderPass(commandBuffer); // end the render pass for the swap chain
 				renderer.endFrame(); // end the frame and submit the command buffer
 			}
@@ -44,24 +54,76 @@ namespace VTA
 		vkDeviceWaitIdle(device.device()); // wait for the device to finish all operations before destroying resources
 	}
 
+    std::unique_ptr<VTAModel> createCubeModel(VTADevice& device, glm::vec3 offset) {
+        std::vector<VTAModel::Vertex> vertices{
+
+            // left face (white)
+            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+            {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+            // right face (yellow)
+            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+            {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+            // top face (orange, remember y axis points down)
+            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+            {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+            // bottom face (red)
+            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+            {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+            // nose face (blue)
+            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+            {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+            // tail face (green)
+            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+            {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
+        };
+        for (auto& v : vertices) {
+            v.position += offset;
+        }
+        return std::make_unique<VTAModel>(device, vertices);
+    }
+
 	void AppControl::loadGameObjects()
 	{
-		std::vector<VTAModel::Vertex> vertices = {
-			{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-			{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-			{{0.0f, 0.5f}, {0.0f, 0.0f, 1.0f}}
-		};
-		auto model = std::make_shared<VTAModel>(device, vertices);
+		std::shared_ptr<VTAModel> cubeModel = createCubeModel(device, { 0.f, 0.f, 0.f }); // create the cube model with the device and offset
+		auto cube = VTAGameObject::createGameObject(); // create a game object
+		cube.model = cubeModel; // set the model of the game object to the cube model
+		cube.transform.translation = { 0.f, 0.f, 5.f }; // set the translation of the game object
+		cube.transform.scale = { 0.5f, 0.5f, 0.5f }; // set the scale of the game object
 
-		auto triangle = VTAGameObject::createGameObject();
-		triangle.model = model; // set the model for the game object
-		triangle.color = { 0.1f, 0.8f, 0.1f }; // set the color for the game object
-		triangle.transform2d.translation.x = 0.2f;
-		triangle.transform2d.scale = { 2.f, 0.5f }; 
-		triangle.transform2d.rotation = 0.25f * glm::two_pi<float>(); // rotate the triangle by 90 degrees
-
-		gameObjects.push_back(std::move(triangle)); // add the game object to the vector
+		gameObjects.push_back(std::move(cube)); // add the game object to the vector of game objects
 	}
+
+   
 
 }
 

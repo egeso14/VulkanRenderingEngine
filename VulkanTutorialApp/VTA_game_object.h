@@ -1,26 +1,33 @@
 #pragma once
 #include "VTA_model.h"
 
+// libs 
+#include <glm/gtc/matrix_transform.hpp>
+
+
 // std
 #include <memory>
 
 
 namespace VTA
 {
-	struct Transform2dComponent
+	struct TransformComponent
 	{
-		glm::vec2 translation {};
-		glm::vec2 scale{ 1.f, 1.f };
-		float rotation;
+		glm::vec3 translation {};
+		glm::vec3 scale{ 1.f, 1.f, 1.f };
+		glm::vec3 rotation{};
 
-		glm::mat2 mat2() {
+		// Matrix corresponds to translate * Ry *Rx * Rz * scale transformation
+		glm::mat4 mat4() {
 
-			const float s = glm::sin(rotation);
-			const float c = glm::cos(rotation);
+			auto transform = glm::translate(glm::mat4(1.f), translation);
 
-			glm::mat2 rotationMat{ { c, s } , { -s, c } }; // these are columns!!!!
-			glm::mat2 scaleMat{ {scale.x, 0.f}, {0.f, scale.y} }; // these are columns!!!!
-			return rotationMat * scaleMat;
+			transform = glm::rotate(transform, rotation.y, { 0.f, 1.f, 0.f });
+			transform = glm::rotate(transform, rotation.x, { 1.f, 0.f, 0.f });
+			transform = glm::rotate(transform, rotation.z, { 0.f, 0.f, 1.f });
+
+			transform = glm::scale(transform, scale);
+			return transform;
 		}
 	};
 
@@ -52,7 +59,7 @@ namespace VTA
 
 	// components
 
-	Transform2dComponent transform2d{};
+	TransformComponent transform{};
 
 
 	private:
