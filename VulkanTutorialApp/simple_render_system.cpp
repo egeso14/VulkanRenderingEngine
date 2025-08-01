@@ -13,7 +13,8 @@ namespace VTA
 	struct SimplePushConstantsData
 	{
 		glm::mat4 transform{ 1.f };
-		alignas(16) glm::vec3 color;
+		//alignas(16) glm::vec3 color;
+		glm::mat4 normalMatrix{ 1.f };
 	};
 
 
@@ -81,8 +82,9 @@ namespace VTA
 		{
 
 			SimplePushConstantsData push{};
-			push.color = obj.color; // use the color from the game object
-			push.transform = projectionView * obj.transform.mat4(); // use the transform from the game object
+			auto modelMatrix = obj.transform.mat4();
+			push.transform = projectionView * modelMatrix; // use the transform from the game object
+			push.normalMatrix = obj.transform.normalMatrix(); // also send the model matrix to the shader
 
 			vkCmdPushConstants(commandBuffer,
 				pipelineLayout,

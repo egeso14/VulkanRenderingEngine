@@ -74,7 +74,7 @@ namespace VTA
 
 	void AppControl::loadGameObjects()
 	{
-		std::shared_ptr<VTAModel> cubeModel = VTAModel::createModelFromFile(device, "models/colored_cube.obj"); // load the cube model from the file
+		std::shared_ptr<VTAModel> cubeModel = VTAModel::createModelFromFile(device, "models/flat_vase.obj"); // load the cube model from the file
 		auto cube = VTAGameObject::createGameObject(); // create a game object
 		cube.model = cubeModel; // set the model of the game object to the cube model
 		cube.transform.translation = { 0.f, 0.f, 5.f }; // set the translation of the game object
