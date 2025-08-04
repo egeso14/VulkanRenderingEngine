@@ -1,5 +1,6 @@
 #pragma once
 #include "VTA_device.hpp"
+#include "VTA_buffer.h"
 // libs
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // Vulkan expects depth values to be in the range [0, 1]
@@ -57,12 +58,14 @@ namespace VTA
 	private:
 		VTADevice& device;
 		
-		VkBuffer vertexBuffer; // two seperate objects. This gives control of memory management to us
-		VkDeviceMemory vertexBufferMemory;
+		//VkBuffer vertexBuffer; // two seperate objects. This gives control of memory management to us
+		//VkDeviceMemory vertexBufferMemory;
+		std::unique_ptr<VTABuffer> vertexBuffer; // using VTABuffer for better memory management
 		uint32_t vertexCount;
 
-		VkBuffer indexBuffer; // two seperate objects. This gives control of memory management to us
-		VkDeviceMemory indexBufferMemory;
+		//VkBuffer indexBuffer; // two seperate objects. This gives control of memory management to us
+		//VkDeviceMemory indexBufferMemory;
+		std::unique_ptr<VTABuffer> indexBuffer; // using VTABuffer for better memory management
 		uint32_t indexCount;
 
 		bool hasIndexBuffer = false;

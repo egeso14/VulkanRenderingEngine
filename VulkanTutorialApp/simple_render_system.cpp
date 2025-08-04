@@ -12,15 +12,15 @@ namespace VTA
 {
 	struct SimplePushConstantsData
 	{
-		glm::mat4 transform{ 1.f };
+		glm::mat4 modelMatrix{ 1.f };
 		//alignas(16) glm::vec3 color;
 		glm::mat4 normalMatrix{ 1.f };
 	};
 
 
-	SimpleRenderSystem::SimpleRenderSystem(VTADevice& device, VkRenderPass renderPass) : device{ device }
+	SimpleRenderSystem::SimpleRenderSystem(VTADevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : device{ device }
 	{
-		createPipelineLayout();
+		createPipelineLayout(globalSetLayout);
 		createPipeline(renderPass); // create the pipeline with the shader modules and pipeline layout
 	}
 
@@ -31,7 +31,7 @@ namespace VTA
 
 
 
-	void SimpleRenderSystem::createPipelineLayout()
+	void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
 	{
 
 		VkPushConstantRange pushConstantRange{};
@@ -39,10 +39,13 @@ namespace VTA
 		pushConstantRange.offset = 0; // offset in bytes from the start of the push constant range
 		pushConstantRange.size = sizeof(SimplePushConstantsData); // size of the push constant in bytes
 
+
+		std::vector<VkDescriptorSetLayout> descriptorSetLayouts { globalSetLayout };
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 0; // Optional
-		pipelineLayoutInfo.pSetLayouts = nullptr; // info sent to the pipieline other than vertex info
+		pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size()); // Optional
+		pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // info sent to the pipieline other than vertex info
 		pipelineLayoutInfo.pushConstantRangeCount = 1; // Very efficient way to send data to shader programs
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
@@ -72,10 +75,18 @@ namespace VTA
 
 
 
-	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VTAGameObject>& gameObjects, VTACamera& camera)
+	void SimpleRenderSystem::renderGameObjects(FrameInfo& frameInfo, std::vector<VTAGameObject>& gameObjects)
 	{
-		pipeline->bind(commandBuffer); // bind the pipeline to the command buffer
-		auto projectionView = camera.getProjection() * camera.getView(); 
+		pipeline->bind(frameInfo.commandBuffer); // bind the pipeline to the command buffer
+		
+		vkCmdBindDescriptorSets
+		(frameInfo.commandBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			pipelineLayout,
+			0, 1,
+			&frameInfo.globalDescriptorSet,
+			0,
+			nullptr);
 
 
 		for (auto& obj : gameObjects)
@@ -83,17 +94,17 @@ namespace VTA
 
 			SimplePushConstantsData push{};
 			auto modelMatrix = obj.transform.mat4();
-			push.transform = projectionView * modelMatrix; // use the transform from the game object
+			push.modelMatrix = modelMatrix; // use the transform from the game object
 			push.normalMatrix = obj.transform.normalMatrix(); // also send the model matrix to the shader
 
-			vkCmdPushConstants(commandBuffer,
+			vkCmdPushConstants(frameInfo.commandBuffer,
 				pipelineLayout,
 				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
 				0,
 				sizeof(SimplePushConstantsData),
 				&push);
-			obj.model->bind(commandBuffer);
-			obj.model->draw(commandBuffer); // draw the model with the push constants set
+			obj.model->bind(frameInfo.commandBuffer);
+			obj.model->draw(frameInfo.commandBuffer); // draw the model with the push constants set
 		}
 
 	}

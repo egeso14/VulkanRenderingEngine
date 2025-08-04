@@ -39,21 +39,31 @@ namespace VTA
 
 	VTAModel::~VTAModel()
 	{
-		vkDestroyBuffer(device.device(), vertexBuffer, nullptr);
-		vkFreeMemory(device.device(), vertexBufferMemory, nullptr);
 
-		if (hasIndexBuffer) {
-			vkDestroyBuffer(device.device(), indexBuffer, nullptr);
-			vkFreeMemory(device.device(), indexBufferMemory, nullptr);
-		}
 	}
 
 	void VTAModel::createVertexBuffers(const std::vector<Vertex>& vertices)
 	{
 		vertexCount = static_cast<uint32_t>(vertices.size());
 		VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
+		uint32_t vertexSize = sizeof(vertices[0]);
+
+		VTABuffer stagingBuffer{ device, vertexSize, vertexCount,
+								VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };
+
+		stagingBuffer.map();
+		stagingBuffer.writeToBuffer((void*)vertices.data());
+
+		vertexBuffer = std::make_unique<VTABuffer>(device, vertexSize, vertexCount,
+			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+			);
+
+		device.copyBuffer(stagingBuffer.getBuffer(),
+			vertexBuffer->getBuffer(),
+			bufferSize);
 		
-		VkBuffer stagingBuffer;
+		/*VkBuffer stagingBuffer;
 		VkDeviceMemory stagingBufferMemory;
 		
 		device.createBuffer(
@@ -61,15 +71,16 @@ namespace VTA
 			VK_BUFFER_USAGE_TRANSFER_SRC_BIT, // tell Vulkan that the buffer we are creating will only be used as the source for a memory transfer operation
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, // the first flag tels Vulkan that the allocated memory is accesible from the CPU
 			stagingBuffer, // the second flag tells Vulkan to make sure the memory in host of device are consistent with each other
-			stagingBufferMemory);
+			stagingBufferMemory);*/
 
-		void* data;
+		/*void* data;
 
 		vkMapMemory(device.device(), stagingBufferMemory, 0, bufferSize, 0, &data); // creates a region of host memory mapped to device memory and sets the beginning of data to point to the beginning of the mapped memory range
 		memcpy(data, vertices.data(), static_cast<size_t>(bufferSize)); // copy the vertex data to the mapped memory
 		vkUnmapMemory(device.device(), stagingBufferMemory); // unmap the memory so that it can be used by the GPU
+		*/
 
-		device.createBuffer(
+		/*device.createBuffer(
 			bufferSize,
 			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -80,6 +91,7 @@ namespace VTA
 
 		vkDestroyBuffer(device.device(), stagingBuffer, nullptr);
 		vkFreeMemory(device.device(), stagingBufferMemory, nullptr);
+		*/
 	}
 
 	void VTAModel::createIndexBuffers(const std::vector<uint32_t>& indices)
@@ -92,7 +104,24 @@ namespace VTA
 		}
 
 		VkDeviceSize bufferSize = sizeof(indices[0]) * indexCount;
-		VkBuffer stagingBuffer;
+		uint32_t indexSize = sizeof(indices[0]);
+
+		VTABuffer stagingBuffer{ device, indexSize, indexCount,
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };
+
+		stagingBuffer.map();
+		stagingBuffer.writeToBuffer((void*)indices.data());
+
+		indexBuffer = std::make_unique<VTABuffer>(device, indexSize, indexCount,
+			VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+		);
+
+		device.copyBuffer(stagingBuffer.getBuffer(),
+			indexBuffer->getBuffer(),
+			bufferSize);
+
+		/*VkBuffer stagingBuffer;
 		VkDeviceMemory stagingBufferMemory;
 
 		device.createBuffer(
@@ -118,7 +147,7 @@ namespace VTA
 		device.copyBuffer(stagingBuffer, indexBuffer, bufferSize);
 
 		vkDestroyBuffer(device.device(), stagingBuffer, nullptr);
-		vkFreeMemory(device.device(), stagingBufferMemory, nullptr);
+		vkFreeMemory(device.device(), stagingBufferMemory, nullptr);*/
 	}
 
 	void VTAModel::draw(VkCommandBuffer commandBuffer)
@@ -147,12 +176,12 @@ namespace VTA
 
 	void VTAModel::bind(VkCommandBuffer commandBuffer)
 	{
-		VkBuffer buffers[] = { vertexBuffer };
+		VkBuffer buffers[] = { vertexBuffer->getBuffer()};
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets); // bind the vertex buffer to the command buffer
 
 		if (hasIndexBuffer) {
-			vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32); // bind the index buffer to the command buffer
+			vkCmdBindIndexBuffer(commandBuffer, indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32); // bind the index buffer to the command buffer
 		}
 
 		assert(vertexCount > 0 && "Cannot draw model with no vertices!");

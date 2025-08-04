@@ -5,6 +5,7 @@
 #include "VTA_renderer.h"
 #include "VTA_model.h"
 #include "VTA_game_object.h"
+#include "VTA_descriptors.h"
 
 #include <memory>
 #include <vector>
@@ -33,6 +34,9 @@ namespace VTA
 		VTAWindow window{ WIDTH, HEIGHT, "Vulkan Window" };
 		VTADevice device{ window };
 		VTARenderer renderer{ window, device };
+
+
+		std::unique_ptr<VTADescriptorPool> globalPool{};
 		std::vector<VTAGameObject> gameObjects;
 	};
 }

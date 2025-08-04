@@ -6,6 +6,7 @@
 #include "VTA_model.h"
 #include "VTA_game_object.h"
 #include "VTA_camera.h"
+#include "VTA_frame_info.h"
 
 #include <memory>
 #include <vector>
@@ -17,17 +18,17 @@ namespace VTA
 	public:
 
 
-		SimpleRenderSystem(VTADevice& device, VkRenderPass renderPass);
+		SimpleRenderSystem(VTADevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		~SimpleRenderSystem();
 
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete; // this is to establish unique ownership of resources
 
-		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VTAGameObject>& gameObjects, VTACamera &camera);
+		void renderGameObjects(FrameInfo &frameIndo, std::vector<VTAGameObject>& gameObjects);
 
 	private:
 
-		void createPipelineLayout();
+		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void createPipeline(VkRenderPass renderPass);
 
 
