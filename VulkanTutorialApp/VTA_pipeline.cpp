@@ -104,6 +104,9 @@ namespace VTA
             static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
         configInfo.dynamicStateInfo.flags = 0;
 
+
+		configInfo.bindingDescription = VTAModel::Vertex::getBindingDescriptions();
+        configInfo.attributeDescriptions = VTAModel::Vertex::getAttributeDescriptions();
     }
 
     std::vector<char> VTAPipeline::readFile(const std::string &filePath)
@@ -150,8 +153,9 @@ namespace VTA
         shaderStages[1].pNext = nullptr;
         shaderStages[1].pSpecializationInfo = nullptr;
 
-		auto bindingDescriptions = VTA::VTAModel::Vertex::getBindingDescriptions();
-		auto attributeDescriptions = VTA::VTAModel::Vertex::getAttributeDescriptions();
+
+        auto& bindingDescriptions = configInfo.bindingDescription;
+		auto& attributeDescriptions = configInfo.attributeDescriptions;
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

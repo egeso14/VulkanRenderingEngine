@@ -12,5 +12,6 @@ namespace VTA {
 		VkCommandBuffer commandBuffer;
 		VTACamera& camera;
 		VkDescriptorSet globalDescriptorSet;
+		VTAGameObject::Map& gameObjects;
 	};
 }

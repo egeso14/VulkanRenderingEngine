@@ -13,18 +13,18 @@
 
 namespace VTA
 {
-	class SimpleRenderSystem
+	class PointLightSystem
 	{
 	public:
 
 
-		SimpleRenderSystem(VTADevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-		~SimpleRenderSystem();
+		PointLightSystem(VTADevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		~PointLightSystem();
 
-		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
-		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete; // this is to establish unique ownership of resources
+		PointLightSystem(const PointLightSystem&) = delete;
+		PointLightSystem& operator=(const PointLightSystem&) = delete; // this is to establish unique ownership of resources
 
-		void renderGameObjects(FrameInfo &frameIndo);
+		void render(FrameInfo& frameIndo);
 
 	private:
 

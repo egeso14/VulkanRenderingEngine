@@ -37,6 +37,6 @@ namespace VTA
 
 
 		std::unique_ptr<VTADescriptorPool> globalPool{};
-		std::vector<VTAGameObject> gameObjects;
+		VTAGameObject::Map gameObjects;
 	};
 }

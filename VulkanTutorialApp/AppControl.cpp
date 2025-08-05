@@ -2,6 +2,7 @@
 #include "simple_render_system.h"
 #include "VTA_camera.h"
 #include "keyboard_movement_controller.h"
+#include "point_light_system.h"
 #include "VTA_Buffer.h"
 #include <stdexcept>
 #include <array>
@@ -20,7 +21,8 @@ namespace VTA
 
 	struct GlobalUbo
 	{
-		glm::mat4 projectionView{ 1.f };
+		glm::mat4 projectionMatrix{ 1.f };
+		glm::mat4 viewMatrix{ 1.f };
 		//glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f, -3.f, -1.f }); // light direction in world space
 		glm::vec4 ambientLightColor{ 1.f, 1.f, 1.f, 0.02f };
 		glm::vec3 lightPosition{ -1.f };
@@ -53,7 +55,7 @@ namespace VTA
 		globalUboBuffer.map(); // map the buffer to host memory so we can write to it
 
 		auto globalSetLayout = VTADescriptorSetLayout::Builder(device)
-			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
 			.build();
 
 
@@ -67,6 +69,8 @@ namespace VTA
 		}
 
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()}; // create the render system with the device and the swap chain render pass
+		PointLightSystem pointLightSystemSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() }; // create the render system with the device and the swap chain render pass
+
         VTACamera camera{};
         //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
         
@@ -105,18 +109,22 @@ namespace VTA
 					frameTime,
 					commandBuffer,
 					camera,
-					globalDescriptorSets[frameIndex]
+					globalDescriptorSets[frameIndex],
+					gameObjects
 				};
 
 				// update
 				GlobalUbo ubo{};
-				ubo.projectionView = camera.getProjection() * camera.getView(); // calculate the projection view matrix
+				ubo.projectionMatrix = camera.getProjection();
+				ubo.viewMatrix = camera.getView();
+
 				globalUboBuffer.writeToIndex(&ubo, frameIndex); // write the projection view matrix to the uniform buffer for the current frame
 				globalUboBuffer.flushIndex(frameIndex); // flush the uniform buffer for the current frame
 
 				// render
 				renderer.beginSwapChainRenderPass(commandBuffer); // begin the render pass for the swap chain
-				simpleRenderSystem.renderGameObjects(frameInfo, gameObjects); // render the game objects
+				simpleRenderSystem.renderGameObjects(frameInfo); // render the game objects
+				pointLightSystemSystem.render(frameInfo);
 				renderer.endSwapChainRenderPass(commandBuffer); // end the render pass for the swap chain
 				renderer.endFrame(); // end the frame and submit the command buffer
 			}
@@ -141,8 +149,8 @@ namespace VTA
 		quad.transform.translation = { 0.f, 0.5f, 0.f }; // set the translation of the game object
 		quad.transform.scale = { 3.1f, 1.f, 3.f }; // set the scale of the game object
 
-		gameObjects.push_back(std::move(cube)); // add the game object to the vector of game objects
-		gameObjects.push_back(std::move(quad));
+		gameObjects.emplace(cube.getId(), std::move(cube)); // add the game object to the vector of game objects
+		gameObjects.emplace(quad.getId(), std::move(quad));
 	}
 
    

@@ -7,6 +7,7 @@
 
 // std
 #include <memory>
+#include <unordered_map>
 
 
 namespace VTA
@@ -27,6 +28,7 @@ namespace VTA
 	{
 	public:
 	using id_t = unsigned int;
+	using Map = std::unordered_map<id_t, VTAGameObject>;
 
 
 	// delete copy constuctor and assignment operator because we want to avoid having duplicate game objects
