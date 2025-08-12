@@ -6,6 +6,7 @@
 namespace VTA
 {
     struct PipelineConfigInfo {
+		PipelineConfigInfo() = default;
 		PipelineConfigInfo(const PipelineConfigInfo&) = delete;
 		PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete; // this is to establish unique ownership of resources
 
@@ -41,6 +42,8 @@ namespace VTA
 		 void bind(VkCommandBuffer commandBuffer);
 
          static void defaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
+         static void enableAlphaBlending(PipelineConfigInfo& configInfo);
+           
 
          private:
          static std::vector<char> readFile(const std::string& filePath);

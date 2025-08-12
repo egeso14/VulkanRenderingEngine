@@ -69,6 +69,7 @@ namespace VTA
 
 		PipelineConfigInfo pipelineConfig{};
 		VTAPipeline::defaultPipelineConfigInfo(pipelineConfig);
+		VTAPipeline::enableAlphaBlending(pipelineConfig); // enable alpha blending for the point light system
 		pipelineConfig.bindingDescription.clear();
 		pipelineConfig.attributeDescriptions.clear();
 
@@ -82,6 +83,19 @@ namespace VTA
 
 	void PointLightSystem::render(FrameInfo& frameInfo)
 	{
+		// sort lights
+		std::map<float, VTAGameObject::id_t> sorted;
+		for (auto& kv : frameInfo.gameObjects)
+		{
+			auto& obj = kv.second;
+			if (obj.pointLight == nullptr) continue;
+			auto offset = frameInfo.camera.getPosition() - obj.transform.translation;
+			sorted[glm::dot(offset, offset)] = obj.getId();
+		}
+
+
+
+
 		pipeline->bind(frameInfo.commandBuffer); // bind the pipeline to the command buffer
 
 		vkCmdBindDescriptorSets
@@ -93,9 +107,9 @@ namespace VTA
 			0,
 			nullptr);
 
-		for (auto& kv : frameInfo.gameObjects)
+		for (auto it = sorted.rbegin(); it != sorted.rend(); ++it)
 		{
-			auto& obj = kv.second;
+			auto& obj = frameInfo.gameObjects.at(it->second);
 			if (obj.pointLight == nullptr) continue;
 
 			PointLightPushConstants push{};

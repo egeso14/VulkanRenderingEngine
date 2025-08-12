@@ -8,6 +8,7 @@
 #include "VTA_camera.h"
 #include "VTA_frame_info.h"
 
+#include <map>
 #include <memory>
 #include <vector>
 
