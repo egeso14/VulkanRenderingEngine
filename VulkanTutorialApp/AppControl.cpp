@@ -19,15 +19,7 @@ namespace VTA
 { 
 
 
-	struct GlobalUbo
-	{
-		glm::mat4 projectionMatrix{ 1.f };
-		glm::mat4 viewMatrix{ 1.f };
-		//glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f, -3.f, -1.f }); // light direction in world space
-		glm::vec4 ambientLightColor{ 1.f, 1.f, 1.f, 0.02f };
-		glm::vec3 lightPosition{ -1.f };
-		alignas(16) glm::vec4 lightColor{ 1.f };
-	};
+	
 
 	AppControl::AppControl()
 	{
@@ -117,7 +109,7 @@ namespace VTA
 				GlobalUbo ubo{};
 				ubo.projectionMatrix = camera.getProjection();
 				ubo.viewMatrix = camera.getView();
-
+				pointLightSystemSystem.update(frameInfo, ubo); // update the point light system with the frame info and the uniform buffer object
 				globalUboBuffer.writeToIndex(&ubo, frameIndex); // write the projection view matrix to the uniform buffer for the current frame
 				globalUboBuffer.flushIndex(frameIndex); // flush the uniform buffer for the current frame
 
@@ -151,6 +143,27 @@ namespace VTA
 
 		gameObjects.emplace(cube.getId(), std::move(cube)); // add the game object to the vector of game objects
 		gameObjects.emplace(quad.getId(), std::move(quad));
+		
+
+		std::vector<glm::vec3> lightColors{
+		 {1.f, .1f, .1f},
+		 {.1f, .1f, 1.f},
+		 {.1f, 1.f, .1f},
+		 {1.f, 1.f, .1f},
+		 {.1f, 1.f, 1.f},
+		 {1.f, 1.f, 1.f}  };
+
+		for (int i = 0; i < lightColors.size(); i++)
+		{
+			auto pointLight = VTAGameObject::makePointLight(0.2f);
+			pointLight.color = lightColors[i];
+			auto rotateLight = glm::rotate(
+				glm::mat4(1.f),
+				(i * glm::two_pi<float>()) / lightColors.size(),
+				{ 0.f, -1.f, 0.f });
+			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
+			gameObjects.emplace(pointLight.getId(), std::move(pointLight)); // add the point light to the vector of game objects
+		}
 	}
 
    

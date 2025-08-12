@@ -25,6 +25,7 @@ namespace VTA
 		PointLightSystem& operator=(const PointLightSystem&) = delete; // this is to establish unique ownership of resources
 
 		void render(FrameInfo& frameIndo);
+		void update(FrameInfo& frameInfo, GlobalUbo& ubo);
 
 	private:
 
@@ -32,7 +33,7 @@ namespace VTA
 		void createPipeline(VkRenderPass renderPass);
 
 
-
+		
 
 		VTADevice& device;
 

@@ -24,12 +24,18 @@ namespace VTA
 	};
 
 
+	struct PointLightComponent
+	{
+		float lightIntensity = 1.0f;
+	};
+
 	class VTAGameObject
 	{
 	public:
 	using id_t = unsigned int;
 	using Map = std::unordered_map<id_t, VTAGameObject>;
 
+	static VTAGameObject makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
 
 	// delete copy constuctor and assignment operator because we want to avoid having duplicate game objects
 	VTAGameObject(const VTAGameObject&) = delete;
@@ -37,6 +43,7 @@ namespace VTA
 	VTAGameObject(VTAGameObject&&) = default;
 	VTAGameObject& operator=(VTAGameObject&&) = default;
 
+	
 
 	static VTAGameObject createGameObject()
 	{
@@ -46,7 +53,7 @@ namespace VTA
 
 	id_t getId() const { return id; }
 
-
+	std::shared_ptr<PointLightComponent> pointLight = nullptr;
 	std::shared_ptr<VTAModel> model{};
 	glm::vec3 color{};
 
