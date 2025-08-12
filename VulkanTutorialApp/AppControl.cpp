@@ -109,6 +109,7 @@ namespace VTA
 				GlobalUbo ubo{};
 				ubo.projectionMatrix = camera.getProjection();
 				ubo.viewMatrix = camera.getView();
+				ubo.inverseView = camera.getInverseView();
 				pointLightSystemSystem.update(frameInfo, ubo); // update the point light system with the frame info and the uniform buffer object
 				globalUboBuffer.writeToIndex(&ubo, frameIndex); // write the projection view matrix to the uniform buffer for the current frame
 				globalUboBuffer.flushIndex(frameIndex); // flush the uniform buffer for the current frame
