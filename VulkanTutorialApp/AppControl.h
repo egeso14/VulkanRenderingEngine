@@ -35,8 +35,8 @@ namespace VTA
 		VTADevice device{ window };
 		VTARenderer renderer{ window, device };
 
-
-		std::unique_ptr<VTADescriptorPool> globalPool{};
+		std::vector<VTADescriptorAllocatorGrowable> descriptorAllocators;
+		std::vector<VkDescriptorSet> globalDescriptorSets;
 		VTAGameObject::Map gameObjects;
 	};
 }

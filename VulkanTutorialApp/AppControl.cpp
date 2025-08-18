@@ -23,11 +23,7 @@ namespace VTA
 
 	AppControl::AppControl()
 	{
-		globalPool = VTADescriptorPool::Builder(device)
-			.setMaxSets(VTASwapChain::MAX_FRAMES_IN_FLIGHT)
-			.addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VTASwapChain::MAX_FRAMES_IN_FLIGHT)
-			.build(); // create the global descriptor pool
-
+		
 		loadGameObjects(); // load the model data into memory
 	}
 
@@ -38,6 +34,10 @@ namespace VTA
 
 	void AppControl::run()
 	{
+		
+		descriptorAllocators = std::vector<VTADescriptorAllocatorGrowable>(VTASwapChain::MAX_FRAMES_IN_FLIGHT);
+
+
 		auto minOffsetAllignment = std::lcm(device.properties.limits.minUniformBufferOffsetAlignment, device.properties.limits.nonCoherentAtomSize);
 
 		VTABuffer globalUboBuffer{ device, sizeof(GlobalUbo), VTASwapChain::MAX_FRAMES_IN_FLIGHT,  // how many uniform buffer objects in our uniform buffer? one for each frame in flight
@@ -51,13 +51,31 @@ namespace VTA
 			.build();
 
 
-		std::vector<VkDescriptorSet> globalDescriptorSets(VTASwapChain::MAX_FRAMES_IN_FLIGHT);
-		for (int i = 0; i < globalDescriptorSets.size(); i++)
+		
+		for (int i = 0; i < descriptorAllocators.size(); i++)
 		{
+			std::vector < VTADescriptorAllocatorGrowable::PoolSizeRatio> frame_sizes = {
+					{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 3 },
+					{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 3 },
+					{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 3 },
+					{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 4 },
+			};
+
+
+			descriptorAllocators[i] = VTADescriptorAllocatorGrowable{};
+			descriptorAllocators[i].init(device.device(), 1000, frame_sizes);
 			auto bufferInfo = globalUboBuffer.descriptorInfo(); // get the descriptor info for the uniform buffer
-			VTADescriptorWriter(*globalSetLayout, *globalPool)
-				.writeBuffer(0, &bufferInfo) // write the buffer info to the descriptor set
-				.build(globalDescriptorSets[i]); // build the descriptor set
+
+			VkDescriptorSet globalDescriptorSet = descriptorAllocators[i].allocate( // allocate a descriptor set from the descriptor allocator
+				device.device(),
+				globalSetLayout->getDescriptorSetLayout()
+			);
+
+			VTADescriptorWriter writer{ *globalSetLayout };
+			writer.writeBuffer(0, &bufferInfo); // write to the writes vector
+			writer.overwrite(globalDescriptorSet, device); // bind descriptor sets to the buffers in the writes vector
+
+			globalDescriptorSets.push_back(globalDescriptorSet);
 		}
 
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()}; // create the render system with the device and the swap chain render pass
@@ -130,11 +148,19 @@ namespace VTA
 
 	void AppControl::loadGameObjects()
 	{
-		std::shared_ptr<VTAModel> cubeModel = VTAModel::createModelFromFile(device, "models/flat_vase.obj"); // load the cube model from the file
-		auto cube = VTAGameObject::createGameObject(); // create a game object
-		cube.model = cubeModel; // set the model of the game object to the cube model
-		cube.transform.translation = { 0.f, 0.f, 0.5f }; // set the translation of the game object
-		cube.transform.scale = { 0.5f, 0.5f, 0.5f }; // set the scale of the game object
+		std::shared_ptr<VTAModel> vaseModel1 = VTAModel::createModelFromFile(device, "models/smooth_vase.obj"); // load the cube model from the file
+		auto vase1 = VTAGameObject::createGameObject(); // create a game object
+		vase1.model = vaseModel1; // set the model of the game object to the cube model
+		vase1.transform.translation = { 0.f, 0.4f, 0.5f }; // set the translation of the game object
+		vase1.transform.scale = { 0.5f, 0.5f, 0.5f }; // set the scale of the game object
+		//cube.transform.rotation = { glm::radians(180.f), 0.f , 0.f };
+
+		std::shared_ptr<VTAModel> vaseModel2 = VTAModel::createModelFromFile(device, "models/smooth_vase.obj"); // load the cube model from the file
+		auto vase2 = VTAGameObject::createGameObject(); // create a game object
+		vase2.model = vaseModel2; // set the model of the game object to the cube model
+		vase2.transform.translation = { 0.f, 0.4f, -0.5f }; // set the translation of the game object
+		vase2.transform.scale = { 0.5f, 0.5f, 0.5f }; // set the scale of the game object
+		//cube.transform.rotation = { glm::radians(180.f), 0.f , 0.f };
 
 		std::shared_ptr<VTAModel> quadModel = VTAModel::createModelFromFile(device, "models/quad.obj"); // load the cube model from the file
 		auto quad = VTAGameObject::createGameObject(); // create a game object
@@ -142,27 +168,29 @@ namespace VTA
 		quad.transform.translation = { 0.f, 0.5f, 0.f }; // set the translation of the game object
 		quad.transform.scale = { 3.1f, 1.f, 3.f }; // set the scale of the game object
 
-		gameObjects.emplace(cube.getId(), std::move(cube)); // add the game object to the vector of game objects
+		gameObjects.emplace(vase2.getId(), std::move(vase2)); // add the game object to the vector of game objects
+		gameObjects.emplace(vase1.getId(), std::move(vase1)); // add the game object to the vector of game objects
 		gameObjects.emplace(quad.getId(), std::move(quad));
 		
 
 		std::vector<glm::vec3> lightColors{
-		 {1.f, .1f, .1f},
+		{1.f, 1.f, 1.f}
+		 /*{1.f, .1f, .1f},
 		 {.1f, .1f, 1.f},
 		 {.1f, 1.f, .1f},
 		 {1.f, 1.f, .1f},
 		 {.1f, 1.f, 1.f},
-		 {1.f, 1.f, 1.f}  };
+		 {1.f, 1.f, 1.f}  */};
 
 		for (int i = 0; i < lightColors.size(); i++)
 		{
-			auto pointLight = VTAGameObject::makePointLight(0.2f);
+			auto pointLight = VTAGameObject::makePointLight(0.3f);
 			pointLight.color = lightColors[i];
-			auto rotateLight = glm::rotate(
+			/*auto rotateLight = glm::rotate(
 				glm::mat4(1.f),
-				(i * glm::two_pi<float>()) / lightColors.size(),
+				(i * glm::two_pi<float>() /2) / lightColors.size(),
 				{ 0.f, -1.f, 0.f });
-			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
+			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-0.2f, -2.f, 0.f, 1.f));*/
 			gameObjects.emplace(pointLight.getId(), std::move(pointLight)); // add the point light to the vector of game objects
 		}
 	}

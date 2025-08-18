@@ -6,6 +6,7 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+#include <span>
 
 namespace VTA {
 
@@ -42,61 +43,44 @@ namespace VTA {
 
         friend class VTADescriptorWriter;
     };
-
-    class VTADescriptorPool {
+    
+    
+    struct VTADescriptorAllocatorGrowable {
     public:
-        class Builder {
-        public:
-            Builder(VTADevice& device) : device{ device } {}
-
-            Builder& addPoolSize(VkDescriptorType descriptorType, uint32_t count);
-            Builder& setPoolFlags(VkDescriptorPoolCreateFlags flags);
-            Builder& setMaxSets(uint32_t count);
-            std::unique_ptr<VTADescriptorPool> build() const;
-
-        private:
-            VTADevice& device;
-            std::vector<VkDescriptorPoolSize> poolSizes{};
-            uint32_t maxSets = 1000;
-            VkDescriptorPoolCreateFlags poolFlags = 0;
+        struct PoolSizeRatio {
+            VkDescriptorType type;
+            float ratio;
         };
 
-        VTADescriptorPool(
-            VTADevice& device,
-            uint32_t maxSets,
-            VkDescriptorPoolCreateFlags poolFlags,
-            const std::vector<VkDescriptorPoolSize>& poolSizes);
-        ~VTADescriptorPool();
-        VTADescriptorPool(const VTADescriptorPool&) = delete;
-        VTADescriptorPool& operator=(const VTADescriptorPool&) = delete;
+        void init(VkDevice device, uint32_t initialSets, std::span<PoolSizeRatio> poolRatios);
+        void clear_pools(VkDevice device);
+        void destroy_pools(VkDevice device);
 
-        bool allocateDescriptor(
-            const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
-
-        void freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const;
-
-        void resetPool();
-
+        VkDescriptorSet allocate(VkDevice device, VkDescriptorSetLayout layout, void* pNext = nullptr);
     private:
-        VTADevice& device;
-        VkDescriptorPool descriptorPool;
+        VkDescriptorPool get_pool(VkDevice device);
+        VkDescriptorPool create_pool(VkDevice device, uint32_t setCount, std::span<PoolSizeRatio> poolRatios);
 
-        friend class VTADescriptorWriter;
+        std::vector<PoolSizeRatio> ratios;
+        std::vector<VkDescriptorPool> fullPools;
+        std::vector<VkDescriptorPool> readyPools;
+        uint32_t setsPerPool;
+
     };
+
+
 
     class VTADescriptorWriter {
     public:
-        VTADescriptorWriter(VTADescriptorSetLayout& setLayout, VTADescriptorPool& pool);
+        VTADescriptorWriter(VTADescriptorSetLayout& setLayout);
 
         VTADescriptorWriter& writeBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
         VTADescriptorWriter& writeImage(uint32_t binding, VkDescriptorImageInfo* imageInfo);
 
-        bool build(VkDescriptorSet& set);
-        void overwrite(VkDescriptorSet& set);
+        void overwrite(VkDescriptorSet& set, VTADevice& device);
 
     private:
         VTADescriptorSetLayout& setLayout;
-        VTADescriptorPool& pool;
         std::vector<VkWriteDescriptorSet> writes;
     };
 

@@ -55,86 +55,132 @@ namespace VTA {
         vkDestroyDescriptorSetLayout(device.device(), descriptorSetLayout, nullptr);
     }
 
-    // *************** Descriptor Pool Builder *********************
-
-    VTADescriptorPool::Builder& VTADescriptorPool::Builder::addPoolSize(
-        VkDescriptorType descriptorType, uint32_t count) {
-        poolSizes.push_back({ descriptorType, count });
-        return *this;
-    }
-
-    VTADescriptorPool::Builder& VTADescriptorPool::Builder::setPoolFlags(
-        VkDescriptorPoolCreateFlags flags) {
-        poolFlags = flags;
-        return *this;
-    }
-    VTADescriptorPool::Builder& VTADescriptorPool::Builder::setMaxSets(uint32_t count) {
-        maxSets = count;
-        return *this;
-    }
-
-    std::unique_ptr<VTADescriptorPool> VTADescriptorPool::Builder::build() const {
-        return std::make_unique<VTADescriptorPool>(device, maxSets, poolFlags, poolSizes);
-    }
-
     // *************** Descriptor Pool *********************
 
-    VTADescriptorPool::VTADescriptorPool(
-        VTADevice& device,
-        uint32_t maxSets,
-        VkDescriptorPoolCreateFlags poolFlags,
-        const std::vector<VkDescriptorPoolSize>& poolSizes)
-        : device{ device } {
-        VkDescriptorPoolCreateInfo descriptorPoolInfo{};
-        descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-        descriptorPoolInfo.pPoolSizes = poolSizes.data();
-        descriptorPoolInfo.maxSets = maxSets;
-        descriptorPoolInfo.flags = poolFlags;
+    VkDescriptorPool VTADescriptorAllocatorGrowable::get_pool(VkDevice device)
+    {
+        VkDescriptorPool newPool;
 
-        if (vkCreateDescriptorPool(device.device(), &descriptorPoolInfo, nullptr, &descriptorPool) !=
-            VK_SUCCESS) {
-            throw std::runtime_error("failed to create descriptor pool!");
+        if (readyPools.size() != 0)
+        {
+            newPool = readyPools.back();
+            readyPools.pop_back();
         }
+        else {
+            newPool = create_pool(device, setsPerPool, ratios);
+            setsPerPool = setsPerPool * 1.5f;
+            if (setsPerPool > 4092)
+            {
+                setsPerPool = 4092;
+            }
+        }
+        return newPool;
     }
 
-    VTADescriptorPool::~VTADescriptorPool() {
-        vkDestroyDescriptorPool(device.device(), descriptorPool, nullptr);
+    VkDescriptorPool VTADescriptorAllocatorGrowable::create_pool(VkDevice device, uint32_t setCount, std::span<PoolSizeRatio> poolRatios)
+    {
+        std::vector<VkDescriptorPoolSize> poolSizes;
+        for (PoolSizeRatio ratio : ratios)
+        {
+            poolSizes.push_back(VkDescriptorPoolSize{
+                .type = ratio.type,
+                .descriptorCount = uint32_t(ratio.ratio * setCount)
+                });
+        }
+
+        VkDescriptorPoolCreateInfo pool_info = {};
+        pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        pool_info.flags = 0;
+        pool_info.maxSets = setCount;
+        pool_info.poolSizeCount = (uint32_t)poolSizes.size();
+        pool_info.pPoolSizes = poolSizes.data();
+		
+		VkDescriptorPool newPool;
+		vkCreateDescriptorPool(device, &pool_info, nullptr, &newPool);
+		return newPool;
+
     }
 
-    bool VTADescriptorPool::allocateDescriptor(
-        const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const {
-        VkDescriptorSetAllocateInfo allocInfo{};
+    void VTADescriptorAllocatorGrowable::init(VkDevice device, uint32_t maxSets, std::span<PoolSizeRatio> poolRatios)
+    {
+        ratios.clear();
+
+        for (auto r : poolRatios) {
+            ratios.push_back(r);
+        }
+
+        VkDescriptorPool newPool = create_pool(device, maxSets, poolRatios);
+
+        setsPerPool = maxSets * 1.5; //grow it next allocation
+
+        readyPools.push_back(newPool);
+    }
+
+    void VTADescriptorAllocatorGrowable::clear_pools(VkDevice device)
+    {
+        for (auto p : readyPools) {
+            vkResetDescriptorPool(device, p, 0);
+        }
+        for (auto p : fullPools) {
+            vkResetDescriptorPool(device, p, 0);
+            readyPools.push_back(p);
+        }
+        fullPools.clear();
+    }
+
+    void VTADescriptorAllocatorGrowable::destroy_pools(VkDevice device)
+    {
+        for (auto p : readyPools) {
+            vkDestroyDescriptorPool(device, p, nullptr);
+        }
+        readyPools.clear();
+        for (auto p : fullPools) {
+            vkDestroyDescriptorPool(device, p, nullptr);
+        }
+        fullPools.clear();
+    }
+
+    VkDescriptorSet VTADescriptorAllocatorGrowable::allocate(VkDevice device, VkDescriptorSetLayout layout, void* pNext)
+    {
+        //get or create a pool to allocate from
+        VkDescriptorPool poolToUse = get_pool(device);
+
+        VkDescriptorSetAllocateInfo allocInfo = {};
+        allocInfo.pNext = pNext;
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = descriptorPool;
-        allocInfo.pSetLayouts = &descriptorSetLayout;
+        allocInfo.descriptorPool = poolToUse;
         allocInfo.descriptorSetCount = 1;
+        allocInfo.pSetLayouts = &layout;
 
-        // Might want to create a "DescriptorPoolManager" class that handles this case, and builds
-        // a new pool whenever an old pool fills up. But this is beyond our current scope
-        if (vkAllocateDescriptorSets(device.device(), &allocInfo, &descriptor) != VK_SUCCESS) {
-            return false;
+        VkDescriptorSet ds;
+        VkResult result = vkAllocateDescriptorSets(device, &allocInfo, &ds);
+
+        //allocation failed. Try again
+        if (result == VK_ERROR_OUT_OF_POOL_MEMORY || result == VK_ERROR_FRAGMENTED_POOL) {
+
+            fullPools.push_back(poolToUse);
+
+            poolToUse = get_pool(device);
+            allocInfo.descriptorPool = poolToUse;
+
+            if (vkAllocateDescriptorSets(device, &allocInfo, &ds) != VK_SUCCESS) {
+                throw std::runtime_error("failed to allocate descriptor set after growing pool!");
+			}
         }
-        return true;
+
+        readyPools.push_back(poolToUse);
+        return ds;
     }
 
-    void VTADescriptorPool::freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const {
-        vkFreeDescriptorSets(
-            device.device(),
-            descriptorPool,
-            static_cast<uint32_t>(descriptors.size()),
-            descriptors.data());
-    }
 
-    void VTADescriptorPool::resetPool() {
-        vkResetDescriptorPool(device.device(), descriptorPool, 0);
-    }
+
 
     // *************** Descriptor Writer *********************
 
-    VTADescriptorWriter::VTADescriptorWriter(VTADescriptorSetLayout& setLayout, VTADescriptorPool& pool)
-        : setLayout{ setLayout }, pool{ pool } {
+    VTADescriptorWriter::VTADescriptorWriter(VTADescriptorSetLayout& setLayout)
+        : setLayout{ setLayout } {
     }
+
 
     VTADescriptorWriter& VTADescriptorWriter::writeBuffer(
         uint32_t binding, VkDescriptorBufferInfo* bufferInfo) {
@@ -178,20 +224,12 @@ namespace VTA {
         return *this;
     }
 
-    bool VTADescriptorWriter::build(VkDescriptorSet& set) {
-        bool success = pool.allocateDescriptor(setLayout.getDescriptorSetLayout(), set);
-        if (!success) {
-            return false;
-        }
-        overwrite(set);
-        return true;
-    }
 
-    void VTADescriptorWriter::overwrite(VkDescriptorSet& set) {
+    void VTADescriptorWriter::overwrite(VkDescriptorSet& set, VTADevice& device) {
         for (auto& write : writes) {
             write.dstSet = set;
         }
-        vkUpdateDescriptorSets(pool.device.device(), writes.size(), writes.data(), 0, nullptr);
+        vkUpdateDescriptorSets(device.device(), writes.size(), writes.data(), 0, nullptr);
     }
 
-}  // namespace l
+}
