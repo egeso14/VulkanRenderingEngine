@@ -196,7 +196,7 @@ namespace VTA
 		return bindingDescriptions;
 	}
 
-	std::vector<VkVertexInputAttributeDescription> VTAModel::Vertex::getAttributeDescriptions()
+	std::vector<VkVertexInputAttributeDescription> VTAModel::Vertex::getAttributeDescriptions ()
 	{
 	
 		std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};

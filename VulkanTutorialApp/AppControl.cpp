@@ -4,6 +4,7 @@
 #include "keyboard_movement_controller.h"
 #include "point_light_system.h"
 #include "VTA_Buffer.h"
+#include "VTA_image.h"
 #include <stdexcept>
 #include <array>
 #include <chrono>
@@ -48,9 +49,10 @@ namespace VTA
 
 		auto globalSetLayout = VTADescriptorSetLayout::Builder(device)
 			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+			.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
 			.build();
 
-
+		VTA_Image::Texture testTexture(device, "Textures/OnyxTexture4K.jpg");
 		
 		for (int i = 0; i < descriptorAllocators.size(); i++)
 		{
@@ -65,6 +67,7 @@ namespace VTA
 			descriptorAllocators[i] = VTADescriptorAllocatorGrowable{};
 			descriptorAllocators[i].init(device.device(), 1000, frame_sizes);
 			auto bufferInfo = globalUboBuffer.descriptorInfo(); // get the descriptor info for the uniform buffer
+			auto imageInfo = testTexture.descriptorInfo();
 
 			VkDescriptorSet globalDescriptorSet = descriptorAllocators[i].allocate( // allocate a descriptor set from the descriptor allocator
 				device.device(),
@@ -73,6 +76,7 @@ namespace VTA
 
 			VTADescriptorWriter writer{ *globalSetLayout };
 			writer.writeBuffer(0, &bufferInfo); // write to the writes vector
+			writer.writeImage(1, &imageInfo);
 			writer.overwrite(globalDescriptorSet, device); // bind descriptor sets to the buffers in the writes vector
 
 			globalDescriptorSets.push_back(globalDescriptorSet);
