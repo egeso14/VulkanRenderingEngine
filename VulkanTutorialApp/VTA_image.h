@@ -26,6 +26,8 @@ namespace VTA_Image
 		uint32_t imageSize;
 		stbi_uc* pixels;
 		const char* filepath;
+		uint32_t mipLevels;
+
 		VTA::VTADevice& device;
 
 		//Resources
@@ -48,6 +50,7 @@ namespace VTA_Image
 		void writeToDevice();
 		void createTextureImageView();
 		void createTextureSampler();
+		void generateMipmaps();
 		
 		VkImageCreateInfo constructImageCreateInfo();
 
