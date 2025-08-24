@@ -32,6 +32,8 @@ class VTASwapChain {
   VkExtent2D getSwapChainExtent() { return swapChainExtent; }
   uint32_t width() { return swapChainExtent.width; }
   uint32_t height() { return swapChainExtent.height; }
+  
+
 
   float extentAspectRatio() {
     return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
@@ -49,6 +51,7 @@ class VTASwapChain {
  private:
   void init();
   void createSwapChain();
+  void createColorResources();
   void createImageViews();
   void createDepthResources();
   void createRenderPass();
@@ -69,11 +72,20 @@ class VTASwapChain {
   std::vector<VkFramebuffer> swapChainFramebuffers;
   VkRenderPass renderPass;
 
-  std::vector<VkImage> depthImages;
-  std::vector<VkDeviceMemory> depthImageMemorys;
-  std::vector<VkImageView> depthImageViews;
+  // we need one of these since they will always be written to serially by the gpu
+  VkImage colorImage;
+  VkDeviceMemory colorImageMemory;
+  VkImageView colorImageView;
+
+  VkImage depthImage;
+  VkDeviceMemory depthImageMemory;
+  VkImageView depthImageView;
+
+  // we have to have multiple of these so that we aren't bottlenecked by our monitor's refresh rate
   std::vector<VkImage> swapChainImages;
   std::vector<VkImageView> swapChainImageViews;
+
+  
 
   VTADevice &device;
   VkExtent2D windowExtent;

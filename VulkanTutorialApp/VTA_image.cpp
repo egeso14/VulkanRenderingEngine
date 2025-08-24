@@ -7,6 +7,44 @@ namespace VTA_Image
 {
 	// image functions
 
+	void createImage(
+		uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkSampleCountFlagBits numSample,
+		VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VTA::VTADevice& device)
+	{
+		VkImageCreateInfo imageInfo{};
+		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		imageInfo.imageType = VK_IMAGE_TYPE_2D;
+		imageInfo.extent.width = width;
+		imageInfo.extent.height = height;
+		imageInfo.extent.depth = 1;
+		imageInfo.mipLevels = 1;
+		imageInfo.arrayLayers = 1;
+		imageInfo.format = format;
+		imageInfo.tiling = tiling;
+		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		imageInfo.usage = usage;
+		imageInfo.samples = numSample;
+		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		if (vkCreateImage(device.device(), &imageInfo, nullptr, &image) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create image!");
+		}
+
+		VkMemoryRequirements memRequirements;
+		vkGetImageMemoryRequirements(device.device(), image, &memRequirements);
+
+		VkMemoryAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		allocInfo.allocationSize = memRequirements.size;
+		allocInfo.memoryTypeIndex = device.findMemoryType(memRequirements.memoryTypeBits, properties);
+
+		if (vkAllocateMemory(device.device(), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
+			throw std::runtime_error("failed to allocate image memory!");
+		}
+
+		vkBindImageMemory(device.device(), image, imageMemory, 0);
+	}
+
 	VkImageView createImageView(VTA::VTADevice& device, VkImage image, VkFormat format, uint32_t mipLevel)
 	{
 		VkImageViewCreateInfo viewInfo{};
@@ -364,6 +402,8 @@ namespace VTA_Image
 
 		return imageInfo;
 	}
+
+	
 
 	
 

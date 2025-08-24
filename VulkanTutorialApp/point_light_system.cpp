@@ -68,7 +68,7 @@ namespace VTA
 
 
 		PipelineConfigInfo pipelineConfig{};
-		VTAPipeline::defaultPipelineConfigInfo(pipelineConfig);
+		VTAPipeline::defaultPipelineConfigInfo(pipelineConfig, device.msaaSamples);
 		VTAPipeline::enableAlphaBlending(pipelineConfig); // enable alpha blending for the point light system
 		pipelineConfig.bindingDescription.clear();
 		pipelineConfig.attributeDescriptions.clear();

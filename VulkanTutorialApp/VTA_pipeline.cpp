@@ -26,7 +26,7 @@ namespace VTA
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline); // this is a graphics pipeline, but other options are available: compute and ray tracing.
     }
 
-    void VTAPipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo)
+    void VTAPipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo, VkSampleCountFlagBits msaaSamples)
     {
 		
         
@@ -57,7 +57,7 @@ namespace VTA
         //multisampling related to how a rasterizer handles the edges of a geometry
         configInfo.multisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
         configInfo.multisampleInfo.sampleShadingEnable = VK_FALSE;
-        configInfo.multisampleInfo.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+        configInfo.multisampleInfo.rasterizationSamples = msaaSamples;
         configInfo.multisampleInfo.minSampleShading = 1.0f;           // Optional
         configInfo.multisampleInfo.pSampleMask = nullptr;             // Optional
         configInfo.multisampleInfo.alphaToCoverageEnable = VK_FALSE;  // Optional

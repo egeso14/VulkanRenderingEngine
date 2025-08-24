@@ -1,4 +1,5 @@
 #include "VTA_swap_chain.hpp"
+#include "VTA_image.h"
 
 // std
 #include <array>
@@ -9,7 +10,11 @@
 #include <set>
 #include <stdexcept>
 
+
+
 namespace VTA {
+
+    
 
 VTASwapChain::VTASwapChain(VTADevice &deviceRef, VkExtent2D extent)
     : device{deviceRef}, windowExtent{extent} {
@@ -25,8 +30,9 @@ VTASwapChain::VTASwapChain(VTADevice& deviceRef, VkExtent2D extent, std::shared_
 
 void VTASwapChain::init() {
     createSwapChain();
-    createImageViews();
     createRenderPass();
+    createImageViews();
+    createColorResources();
     createDepthResources();
     createFramebuffers();
     createSyncObjects();
@@ -43,17 +49,21 @@ VTASwapChain::~VTASwapChain() {
     swapChain = nullptr;
   }
 
-  for (int i = 0; i < depthImages.size(); i++) {
-    vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
-    vkDestroyImage(device.device(), depthImages[i], nullptr);
-    vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
-  }
+  
+    vkDestroyImageView(device.device(), depthImageView, nullptr);
+    vkDestroyImage(device.device(), depthImage, nullptr);
+    vkFreeMemory(device.device(), depthImageMemory, nullptr);
+  
 
   for (auto framebuffer : swapChainFramebuffers) {
     vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
   }
 
   vkDestroyRenderPass(device.device(), renderPass, nullptr);
+
+  vkDestroyImageView(device.device(), colorImageView, nullptr);
+  vkDestroyImage(device.device(), colorImage, nullptr);
+  vkFreeMemory(device.device(), colorImageMemory, nullptr);
 
   // cleanup synchronization objects
   for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -191,6 +201,18 @@ void VTASwapChain::createSwapChain() {
   swapChainExtent = extent;
 }
 
+void VTASwapChain::createColorResources()
+{
+   
+    VkFormat colorFormat = swapChainImageFormat;
+
+    VTA_Image::createImage(width(), height(), colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, 
+                            device.msaaSamples, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorImage, colorImageMemory, device);
+    
+    colorImageView = VTA_Image::createImageView(device, colorImage, colorFormat, 1);
+
+}
+
 void VTASwapChain::createImageViews() {
   swapChainImageViews.resize(swapChainImages.size());
   for (size_t i = 0; i < swapChainImages.size(); i++) {
@@ -215,7 +237,7 @@ void VTASwapChain::createImageViews() {
 void VTASwapChain::createRenderPass() {
   VkAttachmentDescription depthAttachment{};
   depthAttachment.format = findDepthFormat();
-  depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+  depthAttachment.samples = device.msaaSamples;
   depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
   depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -229,27 +251,47 @@ void VTASwapChain::createRenderPass() {
 
   VkAttachmentDescription colorAttachment = {};
   colorAttachment.format = getSwapChainImageFormat();
-  colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+  colorAttachment.samples = device.msaaSamples;
   colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
   colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
   colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
   colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-  colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+  colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
   VkAttachmentReference colorAttachmentRef = {};
   colorAttachmentRef.attachment = 0;
   colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+ 
+  // final target
+  VkAttachmentDescription colorAttachmentResolve{};
+  colorAttachmentResolve.format = swapChainImageFormat;
+  colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
+  colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+  colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+  colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+  colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+  colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+  colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+  // reference to the final target
+  VkAttachmentReference colorAttachmentResolveRef{};
+  colorAttachmentResolveRef.attachment = 2;
+  colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
 
   VkSubpassDescription subpass = {};
   subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
   subpass.colorAttachmentCount = 1;
   subpass.pColorAttachments = &colorAttachmentRef;
   subpass.pDepthStencilAttachment = &depthAttachmentRef;
+  subpass.pResolveAttachments = &colorAttachmentResolveRef;
+
+
 
   VkSubpassDependency dependency = {};
   dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-  dependency.srcAccessMask = 0;
+  dependency.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
   dependency.srcStageMask =
       VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
   dependency.dstSubpass = 0;
@@ -258,7 +300,7 @@ void VTASwapChain::createRenderPass() {
   dependency.dstAccessMask =
       VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-  std::array<VkAttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
+  std::array<VkAttachmentDescription, 3> attachments = {colorAttachment, depthAttachment, colorAttachmentResolve};
   VkRenderPassCreateInfo renderPassInfo = {};
   renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
   renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
@@ -276,7 +318,7 @@ void VTASwapChain::createRenderPass() {
 void VTASwapChain::createFramebuffers() {
   swapChainFramebuffers.resize(imageCount());
   for (size_t i = 0; i < imageCount(); i++) {
-    std::array<VkImageView, 2> attachments = {swapChainImageViews[i], depthImageViews[i]};
+    std::array<VkImageView, 3> attachments = { colorImageView, depthImageView, swapChainImageViews[i]};
 
     VkExtent2D swapChainExtent = getSwapChainExtent();
     VkFramebufferCreateInfo framebufferInfo = {};
@@ -298,16 +340,15 @@ void VTASwapChain::createFramebuffers() {
   }
 }
 
+
+
 void VTASwapChain::createDepthResources() {
   VkFormat depthFormat = findDepthFormat();
   swapChaindepthFormat = depthFormat;
   VkExtent2D swapChainExtent = getSwapChainExtent();
 
-  depthImages.resize(imageCount());
-  depthImageMemorys.resize(imageCount());
-  depthImageViews.resize(imageCount());
 
-  for (int i = 0; i < depthImages.size(); i++) {
+
     VkImageCreateInfo imageInfo{};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -320,19 +361,19 @@ void VTASwapChain::createDepthResources() {
     imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.samples = device.msaaSamples;
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.flags = 0;
 
     device.createImageWithInfo(
         imageInfo,
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        depthImages[i],
-        depthImageMemorys[i]);
+        depthImage,
+        depthImageMemory);
 
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    viewInfo.image = depthImages[i];
+    viewInfo.image = depthImage;
     viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
     viewInfo.format = depthFormat;
     viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
@@ -341,10 +382,10 @@ void VTASwapChain::createDepthResources() {
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount = 1;
 
-    if (vkCreateImageView(device.device(), &viewInfo, nullptr, &depthImageViews[i]) != VK_SUCCESS) {
+    if (vkCreateImageView(device.device(), &viewInfo, nullptr, &depthImageView) != VK_SUCCESS) {
       throw std::runtime_error("failed to create texture image view!");
+    
     }
-  }
 }
 
 void VTASwapChain::createSyncObjects() {
@@ -418,6 +459,8 @@ VkExtent2D VTASwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabi
     return actualExtent;
   }
 }
+
+
 
 VkFormat VTASwapChain::findDepthFormat() {
   return device.findSupportedFormat(

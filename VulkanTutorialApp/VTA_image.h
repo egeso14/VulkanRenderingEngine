@@ -8,7 +8,10 @@
 namespace VTA_Image
 {
 
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkSampleCountFlagBits numSample,
+		VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory, VTA::VTADevice& device);
 
+	VkImageView createImageView(VTA::VTADevice& device, VkImage image, VkFormat format, uint32_t mipLevel);
 	// what does a texture need to be created
 
 	class Texture

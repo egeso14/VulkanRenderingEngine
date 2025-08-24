@@ -44,14 +44,9 @@ namespace VTA
 		}
 		else
 		{
-			std::shared_ptr<VTASwapChain> oldSwapChain = std::move(swapChain); // move the old swap chain to a shared pointer so we can use it later
-			swapChain = std::make_unique<VTASwapChain>(device, extent, std::move(oldSwapChain));
 
-			if (!oldSwapChain->compareSwapFormats(*swapChain.get())) 
-			{
-				throw std::runtime_error("Swap chain image or depth format has changed!"); // we are no longer recreating the pipeline, so if the render passes are incompatible, then we will return an error
-			}
-
+			std::shared_ptr<VTASwapChain> oldSwapChain = std::move(swapChain);
+			swapChain = std::make_unique<VTASwapChain>(device, extent, oldSwapChain);
 
 		}
 	}
@@ -109,7 +104,7 @@ namespace VTA
 			recreateSwapChain();
 		}
 
-		if (result != VK_SUCCESS)
+		else if (result != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to submit command buffer!");
 		}

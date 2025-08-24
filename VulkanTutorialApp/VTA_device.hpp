@@ -72,6 +72,10 @@ class VTADevice {
 
   VkPhysicalDeviceProperties properties;
 
+  VkSampleCountFlagBits msaaSamples; // for multisample anti-aliasing
+
+  VkSampleCountFlagBits getMaxUsableSampleCount();
+
  private:
   void createInstance();
   void setupDebugMessenger();

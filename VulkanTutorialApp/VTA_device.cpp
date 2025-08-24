@@ -68,6 +68,20 @@ VTADevice::~VTADevice() {
   vkDestroyInstance(instance, nullptr);
 }
 
+VkSampleCountFlagBits VTADevice::getMaxUsableSampleCount()
+{
+    VkSampleCountFlags counts = properties.limits.framebufferColorSampleCounts & properties.limits.framebufferDepthSampleCounts;
+
+    if (counts & VK_SAMPLE_COUNT_64_BIT) { return VK_SAMPLE_COUNT_64_BIT; }
+    if (counts & VK_SAMPLE_COUNT_32_BIT) { return VK_SAMPLE_COUNT_32_BIT; }
+    if (counts & VK_SAMPLE_COUNT_16_BIT) { return VK_SAMPLE_COUNT_16_BIT; }
+    if (counts & VK_SAMPLE_COUNT_8_BIT) { return VK_SAMPLE_COUNT_8_BIT; }
+    if (counts & VK_SAMPLE_COUNT_4_BIT) { return VK_SAMPLE_COUNT_4_BIT; }
+    if (counts & VK_SAMPLE_COUNT_2_BIT) { return VK_SAMPLE_COUNT_2_BIT; }
+
+    return VK_SAMPLE_COUNT_1_BIT;
+}
+
 void VTADevice::createInstance() {
   if (enableValidationLayers && !checkValidationLayerSupport()) {
     throw std::runtime_error("validation layers requested, but not available!");
@@ -121,15 +135,19 @@ void VTADevice::pickPhysicalDevice() {
   for (const auto &device : devices) {
     if (isDeviceSuitable(device)) {
       physicalDevice = device;
+      
       break;
     }
   }
+
+ 
 
   if (physicalDevice == VK_NULL_HANDLE) {
     throw std::runtime_error("failed to find a suitable GPU!");
   }
 
   vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+  msaaSamples = getMaxUsableSampleCount();
   std::cout << "physical device: " << properties.deviceName << std::endl;
 }
 
