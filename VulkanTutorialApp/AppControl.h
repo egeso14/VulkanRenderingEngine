@@ -6,6 +6,7 @@
 #include "VTA_model.h"
 #include "VTA_game_object.h"
 #include "VTA_descriptors.h"
+#include "FontAtlas.h"
 
 #include <memory>
 #include <vector>
@@ -29,7 +30,10 @@ namespace VTA
 	private:
 
 		void loadGameObjects();
+		void createFontAtlas();
 
+
+		FontAtlas fontAtlas;
 		float MAX_FRAME_TIME{ 0.2f };
 		VTAWindow window{ WIDTH, HEIGHT, "Vulkan Window" };
 		VTADevice device{ window };
@@ -38,5 +42,6 @@ namespace VTA
 		std::vector<VTADescriptorAllocatorGrowable> descriptorAllocators;
 		std::vector<VkDescriptorSet> globalDescriptorSets;
 		VTAGameObject::Map gameObjects;
+
 	};
 }

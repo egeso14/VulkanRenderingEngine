@@ -9,6 +9,7 @@
 #include <array>
 #include <chrono>
 #include <numeric>
+#include "editor_ui_render_system.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // Vulkan expects depth values to be in the range [0, 1]
@@ -26,6 +27,7 @@ namespace VTA
 	{
 		
 		loadGameObjects(); // load the model data into memory
+		createFontAtlas();
 	}
 
 	AppControl::~AppControl()
@@ -77,6 +79,7 @@ namespace VTA
 			VTADescriptorWriter writer{ *globalSetLayout };
 			writer.writeBuffer(0, &bufferInfo); // write to the writes vector
 			writer.writeImage(1, &imageInfo);
+
 			writer.overwrite(globalDescriptorSet, device); // bind descriptor sets to the buffers in the writes vector
 
 			globalDescriptorSets.push_back(globalDescriptorSet);
@@ -84,6 +87,10 @@ namespace VTA
 
 		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()}; // create the render system with the device and the swap chain render pass
 		PointLightSystem pointLightSystemSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() }; // create the render system with the device and the swap chain render pass
+
+		
+
+		
 
         VTACamera camera{};
         //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
@@ -196,6 +203,29 @@ namespace VTA
 				{ 0.f, -1.f, 0.f });
 			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-0.2f, -2.f, 0.f, 1.f));*/
 			gameObjects.emplace(pointLight.getId(), std::move(pointLight)); // add the point light to the vector of game objects
+		}
+	}
+
+	void AppControl::createFontAtlas()
+	{
+		const char* filePath = "/fonts/Inter_default";
+		float pixelHeight = 14;
+		float firstCodePoint = 32;
+		int codePointCount = 95;
+		float atlasWidth = 256;
+		float atlasHeight = 256;
+		
+
+		if (!BuildFontAtlas(
+			filePath,
+			pixelHeight,
+			firstCodePoint,
+			codePointCount,
+			atlasWidth,
+			atlasHeight,
+			fontAtlas))
+		{
+			throw std::runtime_error("failed to create font atlas!");
 		}
 	}
 

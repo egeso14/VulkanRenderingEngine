@@ -1,5 +1,6 @@
 #pragma once
 #include "VTA_camera.h"
+#include "VTA_Widget.h"
 
 //lib
 #include <vulkan/vulkan.h>
@@ -34,5 +35,6 @@ namespace VTA {
 		VTACamera& camera;
 		VkDescriptorSet globalDescriptorSet;
 		VTAGameObject::Map& gameObjects;
+		std::vector<std::unique_ptr<VTA_UI::VTAWidget>>& topLevelWidgets;
 	};
 }

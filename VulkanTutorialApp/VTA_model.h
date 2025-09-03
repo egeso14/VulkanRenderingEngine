@@ -1,6 +1,7 @@
 #pragma once
 #include "VTA_device.hpp"
 #include "VTA_buffer.h"
+#include "FontAtlas.h"
 // libs
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // Vulkan expects depth values to be in the range [0, 1]
@@ -40,6 +41,7 @@ namespace VTA
 			std::vector<uint32_t> indices{};
 
 			void loadModel(const std::string& filePath);
+			void loadTextModel(const char* utf8, const FontAtlas& A, std::vector<Vertex>& out);
 		};
 
 		VTAModel(VTADevice &device, const VTAModel::Builder &builder);

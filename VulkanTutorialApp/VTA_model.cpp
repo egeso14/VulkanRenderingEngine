@@ -283,4 +283,47 @@ namespace VTA
 			}
 		}
 	}
+	void VTAModel::Builder::loadTextModel(const char* utf8, const FontAtlas& A, std::vector<Vertex>& out)
+	{
+		std::string s = "hello ?";     // UTF-8 bytes
+		const char* utf8 = s.c_str();
+
+		// Re-init font for kerning (you could keep it around instead).
+		stbtt_fontinfo font;
+		stbtt_InitFont(&font, nullptr, 0); // <-- store fontData somewhere to use here
+		// (For brevity, this snippet omits passing fontData. In real code keep fontData.)
+
+		float x = 0;
+		uint32_t prev = 0;
+
+		for (const unsigned char* s = (const unsigned char*)utf8; *s; ++s) {
+			uint32_t cp = *s; // NOTE: UTF-8 decode if you need non-ASCII
+			auto it = A.glyphs.find(cp);
+			if (it == A.glyphs.end()) continue; // skip missing
+
+			// Kerning (needs valid stbtt_fontinfo + scale)
+			// int kern = stbtt_GetCodepointKernAdvance(&font, prev, cp);
+			// x += kern * stbtt_ScaleForPixelHeight(&font, A.pixelHeight);
+			prev = cp;
+
+			const Glyph& g = it->second;
+
+			// stb's y is down; baselineY is where text sits (top-down coords)
+			float x0 = x + g.xOff;
+			float y0 = 0 + g.yOff;   // yOff is typically negative
+			float x1 = x0 + g.w;
+			float y1 = y0 + g.h;
+
+			// 2 triangles
+			out.push_back({  });
+			out.push_back({ x1, y0, g.u1, g.v0 });
+			out.push_back({ x1, y1, g.u1, g.v1 });
+			out.push_back({ x0, y0, g.u0, g.v0 });
+			out.push_back({ x1, y1, g.u1, g.v1 });
+			out.push_back({ x0, y1, g.u0, g.v1 });
+
+			x += g.xAdvance; // move pen
+		}
+		return x - startX;
+	}
 }
