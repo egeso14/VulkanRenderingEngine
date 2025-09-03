@@ -9,3 +9,7 @@
 !/VulkanTutorialApp/**/*.h
 !/VulkanTutorialApp/**/*.hpp
 !/VulkanTutorialApp/**/*.cpp
+
+!/VulkanTutorialApp/**/*.sln
+!/VulkanTutorialApp/**/*.vcxproj
+!/VulkanTutorialApp/**/*.vcxproj.filters

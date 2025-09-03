@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VulkanTutorialApp", "VulkanTutorialApp.vcxproj", "{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EFF7C110-799D-4687-9E59-6FD9967E681B}"
+	ProjectSection(SolutionItems) = preProject
+		VTA_device.cpp = VTA_device.cpp
+		VTA_device.hpp = VTA_device.hpp
+		VTA_pipeline.cpp = VTA_pipeline.cpp
+		VTA_pipeline.h = VTA_pipeline.h
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Debug|x64.ActiveCfg = Debug|x64
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Debug|x64.Build.0 = Debug|x64
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Debug|x86.ActiveCfg = Debug|Win32
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Debug|x86.Build.0 = Debug|Win32
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Release|x64.ActiveCfg = Release|x64
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Release|x64.Build.0 = Release|x64
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Release|x86.ActiveCfg = Release|Win32
+		{7FCC65F9-BA7A-406A-9595-AA8FADEFF270}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
