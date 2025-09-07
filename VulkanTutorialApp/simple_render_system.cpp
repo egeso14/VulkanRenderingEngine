@@ -18,9 +18,9 @@ namespace VTA
 	};
 
 
-	SimpleRenderSystem::SimpleRenderSystem(VTADevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : device{ device }
+	SimpleRenderSystem::SimpleRenderSystem(VTADevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, VkDescriptorSetLayout textureSetLayout) : device{ device }
 	{
-		createPipelineLayout(globalSetLayout);
+		createPipelineLayout(globalSetLayout, textureSetLayout);
 		createPipeline(renderPass); // create the pipeline with the shader modules and pipeline layout
 	}
 
@@ -31,7 +31,7 @@ namespace VTA
 
 
 
-	void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
+	void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout, VkDescriptorSetLayout textureSetLayout)
 	{
 
 		VkPushConstantRange pushConstantRange{};
@@ -40,7 +40,7 @@ namespace VTA
 		pushConstantRange.size = sizeof(SimplePushConstantsData); // size of the push constant in bytes
 
 
-		std::vector<VkDescriptorSetLayout> descriptorSetLayouts { globalSetLayout };
+		std::vector<VkDescriptorSetLayout> descriptorSetLayouts { globalSetLayout, textureSetLayout };
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -84,7 +84,7 @@ namespace VTA
 			VK_PIPELINE_BIND_POINT_GRAPHICS,
 			pipelineLayout,
 			0, 1,
-			&frameInfo.globalDescriptorSet,
+			&frameInfo.descriptorSets[0],
 			0,
 			nullptr);
 
@@ -94,6 +94,15 @@ namespace VTA
 			auto& obj = kv.second;
 
 			if (obj.model == nullptr) continue;
+			
+			vkCmdBindDescriptorSets
+			(frameInfo.commandBuffer,
+				VK_PIPELINE_BIND_POINT_GRAPHICS,
+				pipelineLayout,
+				1, 1,
+				&frameInfo.descriptorSets[obj.model->textureDSindex],
+				0,
+				nullptr);
 
 			SimplePushConstantsData push{};
 			auto modelMatrix = obj.transform.mat4();

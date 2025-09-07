@@ -5,6 +5,7 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // Vulkan expects depth values to be in the range [0, 1]
 #include <glm/glm.hpp>
+#include "VTA_image.h"
 
 // std
 #include <memory>
@@ -52,12 +53,12 @@ namespace VTA
 
 		void bind(VkCommandBuffer commandBuffer);
 		void draw(VkCommandBuffer commandBuffer);
-
+		int textureDSindex;
 		static std::unique_ptr<VTAModel> createModelFromFile(VTADevice& device, const std::string& filePath);
 
 	private:
 		VTADevice& device;
-		
+
 		//VkBuffer vertexBuffer; // two seperate objects. This gives control of memory management to us
 		//VkDeviceMemory vertexBufferMemory;
 		std::unique_ptr<VTABuffer> vertexBuffer; // using VTABuffer for better memory management
@@ -69,8 +70,10 @@ namespace VTA
 		uint32_t indexCount;
 
 		bool hasIndexBuffer = false;
-
+		
 		void createVertexBuffers(const std::vector<Vertex> &vertices);
 		void createIndexBuffers(const std::vector<uint32_t>& indices);
+
+		
 	};
 }

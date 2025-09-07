@@ -1,3 +1,4 @@
+
 #include "AppControl.h"
 #include "simple_render_system.h"
 #include "VTA_camera.h"
@@ -14,6 +15,9 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE // Vulkan expects depth values to be in the range [0, 1]
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+
+#include "Tracy.hpp"
+#include <TracyVulkan.hpp>
 
 
 namespace VTA
@@ -35,7 +39,9 @@ namespace VTA
 
 	void AppControl::run()
 	{
+		ZoneScoped;
 		
+
 		descriptorAllocators = std::vector<VTADescriptorAllocatorGrowable>(VTASwapChain::MAX_FRAMES_IN_FLIGHT);
 
 
@@ -49,10 +55,16 @@ namespace VTA
 
 		auto globalSetLayout = VTADescriptorSetLayout::Builder(device)
 			.addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-			.addBinding(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
 			.build();
 
-		VTA_Image::Texture testTexture(device, "Textures/OnyxTexture4K.jpg");
+		auto textureSetLayout = VTADescriptorSetLayout::Builder(device)
+			.addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
+			.build();
+
+		// setting up tracy for Vulkan
+		auto cmd = device.beginSingleTimeCommands();
+		auto tracyVkCtx = TracyVkContext(device.physicalDevice, device.device(), device.graphicsQueue(), cmd);
+		device.endSingleTimeCommands(cmd);
 		
 		for (int i = 0; i < descriptorAllocators.size(); i++)
 		{
@@ -66,23 +78,45 @@ namespace VTA
 
 			descriptorAllocators[i] = VTADescriptorAllocatorGrowable{};
 			descriptorAllocators[i].init(device.device(), 1000, frame_sizes);
+			
 			auto bufferInfo = globalUboBuffer.descriptorInfo(); // get the descriptor info for the uniform buffer
-			auto imageInfo = testTexture.descriptorInfo();
+			auto testTextureInfo = testTexture.descriptorInfo();
+			auto mipmapTextureInfo = mipmapTexture.descriptorInfo();
+
 
 			VkDescriptorSet globalDescriptorSet = descriptorAllocators[i].allocate( // allocate a descriptor set from the descriptor allocator
 				device.device(),
 				globalSetLayout->getDescriptorSetLayout()
 			);
 
-			VTADescriptorWriter writer{ *globalSetLayout };
-			writer.writeBuffer(0, &bufferInfo); // write to the writes vector
-			writer.writeImage(1, &imageInfo);
-			writer.overwrite(globalDescriptorSet, device); // bind descriptor sets to the buffers in the writes vector
+			VkDescriptorSet testTextureDescriptorSet = descriptorAllocators[i].allocate(
+				device.device(),
+				textureSetLayout->getDescriptorSetLayout()
+			);
 
-			globalDescriptorSets.push_back(globalDescriptorSet);
+			VkDescriptorSet mipmapTextureDescriptorSet = descriptorAllocators[i].allocate(
+				device.device(),
+				textureSetLayout->getDescriptorSetLayout()
+			);
+
+			VTADescriptorWriter globalSetWriter{ *globalSetLayout };
+			globalSetWriter.writeBuffer(0, &bufferInfo); // write to the writes vector
+			globalSetWriter.overwrite(globalDescriptorSet, device); // bind descriptor sets to the buffers in the writes vector
+
+			VTADescriptorWriter testTextureSetWriter{ *textureSetLayout };
+			testTextureSetWriter.writeImage(0, &testTextureInfo);
+			testTextureSetWriter.overwrite(testTextureDescriptorSet, device);
+
+			VTADescriptorWriter mipmapTextureSetWriter{ *textureSetLayout };
+			mipmapTextureSetWriter.writeImage(0, &mipmapTextureInfo);
+			mipmapTextureSetWriter.overwrite(mipmapTextureDescriptorSet, device);
+
+
+
+			descriptorSets.push_back({ globalDescriptorSet, testTextureDescriptorSet, mipmapTextureDescriptorSet });
 		}
 
-		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()}; // create the render system with the device and the swap chain render pass
+		SimpleRenderSystem simpleRenderSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout(), textureSetLayout->getDescriptorSetLayout()}; // create the render system with the device and the swap chain render pass
 		PointLightSystem pointLightSystemSystem{ device, renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() }; // create the render system with the device and the swap chain render pass
 
         VTACamera camera{};
@@ -116,14 +150,15 @@ namespace VTA
 
 			if (auto commandBuffer = renderer.beginFrame()) // begin the frame and get the command buffer
 			{
+				TracyVkZone(tracyVkCtx, commandBuffer, "GBuffer");
 				int frameIndex = renderer.getFrameIndex(); // get the current frame index
-
+				
 				FrameInfo frameInfo {
 					frameIndex,
 					frameTime,
 					commandBuffer,
 					camera,
-					globalDescriptorSets[frameIndex],
+					descriptorSets[frameIndex],
 					gameObjects
 				};
 
@@ -135,16 +170,22 @@ namespace VTA
 				pointLightSystemSystem.update(frameInfo, ubo); // update the point light system with the frame info and the uniform buffer object
 				globalUboBuffer.writeToIndex(&ubo, frameIndex); // write the projection view matrix to the uniform buffer for the current frame
 				globalUboBuffer.flushIndex(frameIndex); // flush the uniform buffer for the current frame
-
+				
 				// render
+				
 				renderer.beginSwapChainRenderPass(commandBuffer); // begin the render pass for the swap chain
 				simpleRenderSystem.renderGameObjects(frameInfo); // render the game objects
 				pointLightSystemSystem.render(frameInfo);
+				
+				FrameMark;
+				TracyVkCollect(tracyVkCtx, commandBuffer);
+				
 				renderer.endSwapChainRenderPass(commandBuffer); // end the render pass for the swap chain
 				renderer.endFrame(); // end the frame and submit the command buffer
+				
 			}
 		}
-
+		TracyVkDestroy(tracyVkCtx);
 		vkDeviceWaitIdle(device.device()); // wait for the device to finish all operations before destroying resources
 	}
 
@@ -156,48 +197,50 @@ namespace VTA
 		auto vase1 = VTAGameObject::createGameObject(); // create a game object
 		vase1.model = vaseModel1; // set the model of the game object to the cube model
 		vase1.transform.translation = { 0.f, 0.4f, 0.5f }; // set the translation of the game object
-		vase1.transform.scale = { 0.5f, 0.5f, 0.5f }; // set the scale of the game object
+		vase1.transform.scale = { 1.f, 1.f, 1.f }; // set the scale of the game object
 		//cube.transform.rotation = { glm::radians(180.f), 0.f , 0.f };
+		vase1.model->textureDSindex = 1;
 
 		std::shared_ptr<VTAModel> vaseModel2 = VTAModel::createModelFromFile(device, "models/smooth_vase.obj"); // load the cube model from the file
 		auto vase2 = VTAGameObject::createGameObject(); // create a game object
 		vase2.model = vaseModel2; // set the model of the game object to the cube model
 		vase2.transform.translation = { 0.f, 0.4f, -0.5f }; // set the translation of the game object
-		vase2.transform.scale = { 0.5f, 0.5f, 0.5f }; // set the scale of the game object
+		vase2.transform.scale = { 1.f, 1.f, 1.f }; // set the scale of the game object
 		//cube.transform.rotation = { glm::radians(180.f), 0.f , 0.f };
+		vase2.model->textureDSindex = 1;
 
-		std::shared_ptr<VTAModel> quadModel = VTAModel::createModelFromFile(device, "models/quad.obj"); // load the cube model from the file
-		auto quad = VTAGameObject::createGameObject(); // create a game object
-		quad.model = quadModel; // set the model of the game object to the cube model
-		quad.transform.translation = { 0.f, 0.5f, 0.f }; // set the translation of the game object
-		quad.transform.scale = { 3.1f, 1.f, 3.f }; // set the scale of the game object
+
+
+
 
 		gameObjects.emplace(vase2.getId(), std::move(vase2)); // add the game object to the vector of game objects
 		gameObjects.emplace(vase1.getId(), std::move(vase1)); // add the game object to the vector of game objects
-		gameObjects.emplace(quad.getId(), std::move(quad));
+
+				std::shared_ptr<VTAModel> quadModel = VTAModel::createModelFromFile(device, "models/quad.obj"); // load the cube model from the file
+				auto quad = VTAGameObject::createGameObject(); // create a game object
+				quad.model = quadModel; // set the model of the game object to the cube model
+				quad.transform.translation = { 0, 0.5f, 0 }; // set the translation of the game object
+				quad.transform.scale = { 3.f, 3.f, 3.f }; // set the scale of the game object
+				quad.model->textureDSindex = 1;
+				gameObjects.emplace(quad.getId(), std::move(quad));
+
+				
+						auto pointLight = VTAGameObject::makePointLight(1.f);
+						pointLight.color = { 1.f, 1.f, 1.f };
+
+						pointLight.transform.translation = glm::vec3(0, -0.5f, 0);
+						gameObjects.emplace(pointLight.getId(), std::move(pointLight)); // add the point light to the vector of game objects
+				
+		
+		
 		
 
-		std::vector<glm::vec3> lightColors{
-		{1.f, 1.f, 1.f}
-		 /*{1.f, .1f, .1f},
-		 {.1f, .1f, 1.f},
-		 {.1f, 1.f, .1f},
-		 {1.f, 1.f, .1f},
-		 {.1f, 1.f, 1.f},
-		 {1.f, 1.f, 1.f}  */};
-
-		for (int i = 0; i < lightColors.size(); i++)
-		{
-			auto pointLight = VTAGameObject::makePointLight(0.3f);
-			pointLight.color = lightColors[i];
-			/*auto rotateLight = glm::rotate(
-				glm::mat4(1.f),
-				(i * glm::two_pi<float>() /2) / lightColors.size(),
-				{ 0.f, -1.f, 0.f });
-			pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-0.2f, -2.f, 0.f, 1.f));*/
-			gameObjects.emplace(pointLight.getId(), std::move(pointLight)); // add the point light to the vector of game objects
-		}
+		
+	
+		
 	}
+
+
 
    
 

@@ -1,11 +1,13 @@
+# Ignore everything in VulkanTutorialApp by default
 /VulkanTutorialApp/**
 
+# But don't ignore subdirectories (so we can selectively unignore files)
 !/VulkanTutorialApp/**/
 
-/VulkanTutorialApp/**/*.h
-/VulkanTutorialApp/**/*.hpp
-/VulkanTutorialApp/**/*.cpp
+# Ignore Tracy folder completely
+/VulkanTutorialApp/Tracy/**
 
+# Re-include source files everywhere else
 !/VulkanTutorialApp/**/*.h
 !/VulkanTutorialApp/**/*.hpp
 !/VulkanTutorialApp/**/*.cpp

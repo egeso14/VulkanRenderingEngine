@@ -6,6 +6,7 @@
 #include "VTA_model.h"
 #include "VTA_game_object.h"
 #include "VTA_descriptors.h"
+#include "VTA_image.h"
 
 #include <memory>
 #include <vector>
@@ -29,6 +30,9 @@ namespace VTA
 	private:
 
 		void loadGameObjects();
+		
+
+		
 
 		float MAX_FRAME_TIME{ 0.2f };
 		VTAWindow window{ WIDTH, HEIGHT, "Vulkan Window" };
@@ -36,7 +40,12 @@ namespace VTA
 		VTARenderer renderer{ window, device };
 
 		std::vector<VTADescriptorAllocatorGrowable> descriptorAllocators;
-		std::vector<VkDescriptorSet> globalDescriptorSets;
+		std::vector<std::vector<VkDescriptorSet>> descriptorSets;
 		VTAGameObject::Map gameObjects;
+
+		VTA_Image::Texture testTexture{ device, "Textures/OnyxTexture4K.jpg" };
+		VTA_Image::Texture mipmapTexture{ device, "Textures/CheckerboardTexture.jpg" };
+
+		
 	};
 }

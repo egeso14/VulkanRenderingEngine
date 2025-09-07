@@ -207,10 +207,10 @@ void VTASwapChain::createColorResources()
     VkFormat colorFormat = swapChainImageFormat;
 
     VTA_Image::createImage(width(), height(), colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, 
-                            device.msaaSamples, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorImage, colorImageMemory, device);
+        device.msaaSamples, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, colorImage, colorImageMemory, device);
     
     colorImageView = VTA_Image::createImageView(device, colorImage, colorFormat, 1);
-
+   
 }
 
 void VTASwapChain::createImageViews() {

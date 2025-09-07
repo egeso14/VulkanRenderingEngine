@@ -6,7 +6,7 @@
 
 namespace VTA {
 
-#define MAX_LIGHTS 10
+#define MAX_LIGHTS 100
 
 	struct PointLight
 	{
@@ -20,7 +20,7 @@ namespace VTA {
 		glm::mat4 viewMatrix{ 1.f };
 		//glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f, -3.f, -1.f }); // light direction in world space
 		glm::mat4 inverseView{ 1.f };
-		glm::vec4 ambientLightColor{ 1.f, 1.f, 1.f, 0.02f };
+		glm::vec4 ambientLightColor{ 1.f, 1.f, 1.f, 0.05f };
 		PointLight pointLightS[MAX_LIGHTS];
 		int numLights;
 	};
@@ -32,7 +32,7 @@ namespace VTA {
 		float frameTime;
 		VkCommandBuffer commandBuffer;
 		VTACamera& camera;
-		VkDescriptorSet globalDescriptorSet;
+		std::vector<VkDescriptorSet> descriptorSets;
 		VTAGameObject::Map& gameObjects;
 	};
 }

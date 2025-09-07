@@ -103,7 +103,7 @@ namespace VTA
 			VK_PIPELINE_BIND_POINT_GRAPHICS,
 			pipelineLayout,
 			0, 1,
-			&frameInfo.globalDescriptorSet,
+			&frameInfo.descriptorSets[0],
 			0,
 			nullptr);
 

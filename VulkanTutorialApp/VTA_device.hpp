@@ -73,7 +73,7 @@ class VTADevice {
   VkPhysicalDeviceProperties properties;
 
   VkSampleCountFlagBits msaaSamples; // for multisample anti-aliasing
-
+  VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
   VkSampleCountFlagBits getMaxUsableSampleCount();
 
  private:
@@ -96,7 +96,7 @@ class VTADevice {
 
   VkInstance instance;
   VkDebugUtilsMessengerEXT debugMessenger;
-  VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+  
   VTAWindow &window;
   VkCommandPool commandPool;
 
