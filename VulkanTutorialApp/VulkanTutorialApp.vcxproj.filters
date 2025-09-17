@@ -16,8 +16,8 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{97029432-2280-4f7b-bc9a-a607fdcf19f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ImGui">
-      <UniqueIdentifier>{9907f246-9319-4889-ab9c-a19cd6256fc2}</UniqueIdentifier>
+    <Filter Include="Source Files\Trex">
+      <UniqueIdentifier>{5b4a5683-a208-4251-9dfc-1ebb788058ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -75,25 +75,7 @@
     <ClCompile Include="stb_image_impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lib\ImGui\cpp_files\imgui.cpp">
-      <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_draw.cpp">
-      <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_impl_glfw.cpp">
-      <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_impl_vulkan.cpp">
-      <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_tables.cpp">
-      <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_widgets.cpp">
-      <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="editor_ui_render_system.cpp">
+    <ClCompile Include="VTA_editor_ui_render_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FlatMesh.cpp">
@@ -101,6 +83,21 @@
     </ClCompile>
     <ClCompile Include="VTA_Widget.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\Trex\src\Atlas.cpp">
+      <Filter>Source Files\Trex</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\Trex\src\BitmapHelpers.cpp">
+      <Filter>Source Files\Trex</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\Trex\src\Charset.cpp">
+      <Filter>Source Files\Trex</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\Trex\src\Font.cpp">
+      <Filter>Source Files\Trex</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\Trex\src\TextShaper.cpp">
+      <Filter>Source Files\Trex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +152,7 @@
     <ClInclude Include="VTA_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="editor_ui_render_system.h">
+    <ClInclude Include="VTA_editor_ui_render_system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FontAtlas.h">
@@ -165,6 +162,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VTA_Widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VTA_frame_info_editorui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -180,6 +180,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="point_light.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="text_shader.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="text_shader.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

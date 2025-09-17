@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\src\Atlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\src\BitmapHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\src\Charset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\src\Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\src\TextShaper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\include\Trex\Atlas.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\include\Trex\BitmapHelpers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\include\Trex\Charset.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\include\Trex\Font.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\include\Trex\TextShaper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{56CE4744-E334-3063-AC84-0A7F62C518E5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{14D1ACE9-E219-3957-92D6-B9848DBF2610}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

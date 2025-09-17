@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\a8dc771e8cc818a0f5ceb1ecb27b4a07\harfbuzz-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\6e3a9c8c04bed6de34634c1cc835f2bf\harfbuzz-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\8ce8bc47855621ed4e592ca764455e3d\harfbuzz-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\harfbuzz-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A2DC8875-1B77-3CBA-B6E6-CC1292324C97}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

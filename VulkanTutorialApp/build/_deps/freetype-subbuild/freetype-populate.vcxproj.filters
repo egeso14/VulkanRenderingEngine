@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\07a67382770ca4515d0ae627c38dd47c\freetype-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\a7288ee3b11e2e55d2ab63dbfb4f5bd4\freetype-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\6b59dafa075a922d580d00383865f308\freetype-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\freetype-subbuild\CMakeFiles\freetype-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{F278C629-88FA-3462-B67B-ADED2D9C81F4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

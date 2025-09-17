@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\harfbuzz-subbuild\CMakeFiles\8ce8bc47855621ed4e592ca764455e3d\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A2DC8875-1B77-3CBA-B6E6-CC1292324C97}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

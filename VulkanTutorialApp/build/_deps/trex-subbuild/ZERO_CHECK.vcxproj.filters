@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\trex-subbuild\CMakeFiles\8aff537ac4b7cf9cc56a3f9370650876\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{938EC96E-E061-38AC-B9BB-708A2C731A5D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

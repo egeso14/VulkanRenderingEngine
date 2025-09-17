@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d91eedce09bb12012350b7b8eb19e8e1\stb-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\d8fa1f996253eb2018e3f7dca0fcd3e4\stb-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\e1c16500af6fa81ad626e5b7d40e015a\stb-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\VulkanLearning\VulkanTutorialApp\build\_deps\stb-subbuild\CMakeFiles\stb-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{57835047-D273-3F08-B1CB-5DE1EE7FEFD9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

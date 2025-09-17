@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\point_light.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\point_light.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\simple_shader.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\simple_shader.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\text_shader.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\text_shader.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\e26ed901243d22e9db746b93246172c8\Shaders.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\Shaders" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{C9101CC9-FFC2-35E2-884C-C0610A72D700}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

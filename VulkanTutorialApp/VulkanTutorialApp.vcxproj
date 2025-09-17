@@ -102,9 +102,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\VulkanLearning\VulkanTutorialApp\lib\ImGui\h_files;D:\VulkanLearning\VulkanTutorialApp\lib\stb_image_loader;D:\VulkanSDK\Include;D:\VulkanLearning\VulkanTutorialApp\lib\stb_font_to_atlas;C:\Users\egeyi\OneDrive\Documents\Visual Studio 2022\Libraries\glm;D:\VulkanLearning\VulkanTutorialApp\lib\TinyObjectLoader;C:\Users\egeyi\OneDrive\Documents\Visual Studio 2022\Libraries\glfw-3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\VulkanLearning\VulkanTutorialApp\lib\Trex\include;D:\VulkanLearning\VulkanTutorialApp\lib\stb_image_loader;D:\VulkanSDK\Include;D:\VulkanLearning\VulkanTutorialApp\lib\stb_font_to_atlas;C:\Users\egeyi\OneDrive\Documents\Visual Studio 2022\Libraries\glm;D:\VulkanLearning\VulkanTutorialApp\lib\TinyObjectLoader;C:\Users\egeyi\OneDrive\Documents\Visual Studio 2022\Libraries\glfw-3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -112,6 +112,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\egeyi\OneDrive\Documents\Visual Studio 2022\Libraries\glfw-3.4.bin.WIN64\lib-vc2022;D:\VulkanSDK\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/VERBOSE %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -122,6 +123,8 @@
 D:\VulkanSDK/Bin/glslc simple_shader.vert -o simple_shader.vert.spv
 D:\VulkanSDK/Bin/glslc point_light.frag -o point_light.frag.spv
 D:\VulkanSDK/Bin/glslc point_light.vert -o point_light.vert.spv
+D:\VulkanSDK/Bin/glslc text_shader.frag -o text_shader.frag.spv
+D:\VulkanSDK/Bin/glslc text_shader.vert -o text_shader.vert.spv
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -149,17 +152,16 @@ D:\VulkanSDK/Bin/glslc point_light.vert -o point_light.vert.spv
     <ClCompile Include="AppControl.cpp" />
     <ClCompile Include="FlatMesh.cpp" />
     <ClCompile Include="keyboard_movement_controller.cpp" />
-    <ClCompile Include="lib\ImGui\cpp_files\imgui.cpp" />
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_draw.cpp" />
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_impl_glfw.cpp" />
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_impl_vulkan.cpp" />
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_tables.cpp" />
-    <ClCompile Include="lib\ImGui\cpp_files\imgui_widgets.cpp" />
+    <ClCompile Include="lib\Trex\src\Atlas.cpp" />
+    <ClCompile Include="lib\Trex\src\BitmapHelpers.cpp" />
+    <ClCompile Include="lib\Trex\src\Charset.cpp" />
+    <ClCompile Include="lib\Trex\src\Font.cpp" />
+    <ClCompile Include="lib\Trex\src\TextShaper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="point_light_system.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
     <ClCompile Include="stb_image_impl.cpp" />
-    <ClCompile Include="editor_ui_render_system.cpp" />
+    <ClCompile Include="VTA_editor_ui_render_system.cpp" />
     <ClCompile Include="VTA_buffer.cpp" />
     <ClCompile Include="VTA_camera.cpp" />
     <ClCompile Include="VTA_descriptors.cpp" />
@@ -186,6 +188,7 @@ D:\VulkanSDK/Bin/glslc point_light.vert -o point_light.vert.spv
     <ClInclude Include="VTA_descriptors.h" />
     <ClInclude Include="VTA_device.hpp" />
     <ClInclude Include="VTA_frame_info.h" />
+    <ClInclude Include="VTA_frame_info_editorui.h" />
     <ClInclude Include="VTA_game_object.h" />
     <ClInclude Include="VTA_image.h" />
     <ClInclude Include="VTA_model.h" />
@@ -195,7 +198,7 @@ D:\VulkanSDK/Bin/glslc point_light.vert -o point_light.vert.spv
     <ClInclude Include="VTA_utils.h" />
     <ClInclude Include="VTA_Widget.h" />
     <ClInclude Include="VTA_Window.h" />
-    <ClInclude Include="editor_ui_render_system.h" />
+    <ClInclude Include="VTA_editor_ui_render_system.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="compile.bat" />
@@ -212,6 +215,8 @@ D:\VulkanSDK/Bin/glslc point_light.vert -o point_light.vert.spv
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:VulkanSDK/Bin/glslc $(InputPath) -o $(InputDir)$(InputName).spv</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(InputDir)$(InputName).spv</Outputs>
     </None>
+    <None Include="text_shader.frag" />
+    <None Include="text_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
