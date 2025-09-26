@@ -35,6 +35,9 @@ namespace VTA
 		void loadGameObjects();
 		void createFontAtlas();
 
+		std::vector<VTADescriptorAllocatorGrowable> descriptorAllocators;
+		std::vector<VkDescriptorSet> globalDescriptorSets;
+		std::vector<VkDescriptorSet> editorUIDescriptorSets;
 
 		Trex::Atlas* fontAtlas;
 		float MAX_FRAME_TIME{ 0.2f };
@@ -42,9 +45,7 @@ namespace VTA
 		VTADevice device{ window };
 		VTARenderer renderer{ window, device };
 
-		std::vector<VTADescriptorAllocatorGrowable> descriptorAllocators;
-		std::vector<VkDescriptorSet> globalDescriptorSets;
-		std::vector<VkDescriptorSet> editorUIDescriptorSets;
+
 		
 		VTAGameObject::Map gameObjects;
 		std::vector<std::shared_ptr<VTA_UI::VTAWidget>> widgets;

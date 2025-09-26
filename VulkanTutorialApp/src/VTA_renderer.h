@@ -37,8 +37,11 @@ namespace VTA
 		
 		VkCommandBuffer getCurrentCommandBuffer() const {
 			assert(isFrameStarted && "Cannot get command buffer when frame is not in progress.");
-			return commandBuffers[currentFrameIndex];
+			return commandBuffers[swapChain->getFrameIndex()];
 		}
+
+		float getScreenWidth() { return swapChain->width(); }
+		float getScreenHeight() { return swapChain->height(); };
 
 		VkCommandBuffer beginFrame();
 		void endFrame();
@@ -52,7 +55,7 @@ namespace VTA
 		int getFrameIndex() const
 		{
 			assert(isFrameStarted && "Cannot get frame index when frame is not in progress.");
-			return currentFrameIndex;
+			return swapChain->getFrameIndex();
 		}
 
 	private:

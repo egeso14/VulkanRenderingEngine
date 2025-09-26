@@ -14,7 +14,7 @@ namespace VTA {
 
 class VTASwapChain {
  public:
-  static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+  static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 
   VTASwapChain(VTADevice &deviceRef, VkExtent2D windowExtent);
   VTASwapChain(VTADevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<VTASwapChain> previous);
@@ -36,7 +36,7 @@ class VTASwapChain {
   uint32_t height() { return swapChainExtent.height; }
   
 
-
+  int getFrameIndex() { return currentFrame; }
   float extentAspectRatio() {
     return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
   }

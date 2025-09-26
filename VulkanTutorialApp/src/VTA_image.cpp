@@ -194,15 +194,10 @@ namespace VTA_Image
 	void Texture::createTextureImage()
 	{
 
-		int x, y, channels;
-		if (stbi_info("image.png", &x, &y, &channels)) {
-			printf("Width = %d, Height = %d, Channels = %d\n", x, y, channels);
-		}
-		else {
-			fprintf(stderr, "Failed to read image info: %s\n", stbi_failure_reason());
-		}
+
+
 		
-		pixels = stbi_load(filepath, &x, &y, &channels, STBI_rgb_alpha);
+		pixels = stbi_load(filepath, &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		imageSize = texWidth * texHeight * 4; // 4 because r, g, b, a
 
 		if (!pixels)
@@ -221,12 +216,13 @@ namespace VTA_Image
 		texWidth = atlas.GetBitmap().Width();
 		texHeight = atlas.GetBitmap().Height();
 		imageSize = texWidth * texHeight;
+		texChannels = atlas.GetBitmap().Channels();
 		
 		if (!pixels)
 		{
 			throw std::runtime_error("failed to loaad texture image");
 		}
-		mipLevels = 0; // how many times can this image be divided into quarter areas
+		mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1; // how many times can this image be divided into quarter areas
 		imageFormat = VK_FORMAT_R8_UNORM;
 		isFontTexture = true;
 	}
@@ -240,9 +236,13 @@ namespace VTA_Image
 										VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT }; 
 		stagingBuffer.map();
 		stagingBuffer.writeToBuffer(pixels);
+		
 		if (!isFontTexture)
 		{
 			stbi_image_free(pixels); // clean up original pixel array
+		}
+		else {
+			pixels = nullptr;
 		}
 	
 
@@ -250,7 +250,7 @@ namespace VTA_Image
 		VkImageCreateInfo imageInfo = constructImageCreateInfo();
 
 		
-		VkDeviceMemory textureImageMemory;
+		
 
 		if (vkCreateImage(device.device(), &imageInfo, nullptr, &textureImage) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create image!");
@@ -267,11 +267,11 @@ namespace VTA_Image
 		allocInfo.allocationSize = memRequirements.size;
 		allocInfo.memoryTypeIndex = device.findMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-		if (vkAllocateMemory(device.device(), &allocInfo, nullptr, &textureImageMemory) != VK_SUCCESS) {
+		if (vkAllocateMemory(device.device(), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
 			throw std::runtime_error("failed to allocate image memory!");
 		}
 
-		vkBindImageMemory(device.device(), textureImage, textureImageMemory, 0);
+		vkBindImageMemory(device.device(), textureImage, imageMemory, 0);
 		transitionImageLayout(device, textureImage, imageFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 		copyBufferToImage(device, stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
 		if (mipLevels > 1)
@@ -385,7 +385,7 @@ namespace VTA_Image
 
 	void Texture::createFontAtlasImageView()
 	{
-		imageView = createImageView(device, textureImage, VK_FORMAT_R8_UNORM, 1);
+		imageView = createImageView(device, textureImage, VK_FORMAT_R8_UNORM, mipLevels);
 	}
 
 	void Texture::createTextureSampler()

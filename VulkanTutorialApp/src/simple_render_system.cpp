@@ -69,7 +69,7 @@ namespace VTA
 		VTAPipeline::defaultPipelineConfigInfo(pipelineConfig, device.msaaSamples);
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		pipeline = std::make_unique<VTAPipeline>(device, "simple_shader.vert.spv", "simple_shader.frag.spv", pipelineConfig);
+		pipeline = std::make_unique<VTAPipeline>(device, "../shaders/simple_shader.vert.spv", "../shaders/simple_shader.frag.spv", pipelineConfig);
 	}
 
 

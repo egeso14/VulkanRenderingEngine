@@ -86,6 +86,7 @@ VkResult VTASwapChain::acquireNextImage(uint32_t *imageIndex) {
       &inFlightFences[currentFrame],
       VK_TRUE,
       std::numeric_limits<uint64_t>::max());
+  
 
   VkResult result = vkAcquireNextImageKHR(
       device.device(),

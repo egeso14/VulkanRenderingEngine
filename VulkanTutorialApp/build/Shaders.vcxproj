@@ -217,6 +217,118 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\shape_shader.frag.spv.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.frag.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\shape_shader.vert.spv.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\VulkanSDK\Bin\glslangValidator.exe -V D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert -o D:/VulkanLearning/VulkanTutorialApp/shaders/shape_shader.vert.spv
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\simple_shader.frag.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating D:/VulkanLearning/VulkanTutorialApp/shaders/simple_shader.frag.spv</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
@@ -450,7 +562,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\Shaders</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
@@ -462,7 +574,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\Shaders</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
@@ -474,7 +586,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\Shaders</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</VerifyInputsAndOutputsExist>
@@ -486,7 +598,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\point_light.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\shape_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\simple_shader.vert.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.frag.spv;D:\VulkanLearning\VulkanTutorialApp\shaders\text_shader.vert.spv;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\Shaders</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</VerifyInputsAndOutputsExist>

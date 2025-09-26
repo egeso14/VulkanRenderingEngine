@@ -45,13 +45,19 @@ namespace VTA
 
 	AppControl::~AppControl()
 	{
-		
+		for (int i = 0; i < descriptorAllocators.size(); i++)
+		{
+			descriptorAllocators[i].clear_pools(device.device());
+			descriptorAllocators[i].destroy_pools(device.device());
+		}
+
+		//delete fontAtlas;
 	}
 
 	void AppControl::run()
 	{
 		
-		descriptorAllocators = std::vector<VTADescriptorAllocatorGrowable>(VTASwapChain::MAX_FRAMES_IN_FLIGHT);
+		
 
 
 		auto minOffsetAllignment = std::lcm(device.properties.limits.minUniformBufferOffsetAlignment, device.properties.limits.nonCoherentAtomSize);
@@ -70,6 +76,8 @@ namespace VTA
 		auto uiSetLayout = VTADescriptorSetLayout::Builder(device)
 			.addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
 			.build();
+
+		descriptorAllocators = std::vector<VTADescriptorAllocatorGrowable>(VTASwapChain::MAX_FRAMES_IN_FLIGHT);
 
 		VTA_Image::Texture testTexture(device, "../Textures/OnyxTexture4K.jpg");
 
@@ -172,7 +180,9 @@ namespace VTA
 					frameIndex,
 					frameTime,
 					commandBuffer,
-					editorUIDescriptorSets[frameIndex]
+					editorUIDescriptorSets[frameIndex],
+					renderer.getScreenWidth(),
+					renderer.getScreenHeight()
 				};
 
 				
@@ -190,12 +200,14 @@ namespace VTA
 				simpleRenderSystem.renderGameObjects(frameInfo); // render the game objects
 				pointLightSystemSystem.render(frameInfo);
 				renderer.endSwapChainRenderPass(commandBuffer); // end the render pass for the swap chain
-
+				
 				// render editor ui
 				renderer.beginSwapChainRenderPass2(commandBuffer);
 				editorUIRenderSystem.renderWidgets(editorUIFrameInfo);
 				renderer.endSwapChainRenderPass(commandBuffer);
+				
 				renderer.endFrame(); // end the frame and submit the command buffer
+				
 			}
 		}
 
@@ -206,15 +218,61 @@ namespace VTA
 
 	void AppControl::loadWidgetObjects()
 	{
+
+
+
+		//std::shared_ptr<VTA_UI::VTAWidget> testWidget = VTA_UI::VTAWidget::create();
+		//testWidget->model = testWidgetMesh;
+		
+		//testWidget->rectTransform.anchors = textAnchors;
+		//testWidget->rectTransform.scale = { 0.5, 0.5, 0.5 };
+
+		//widgets.push_back(std::move(testWidget));
+
+		// below this line we create the box
+
+		VTA_UI::Anchors boxAnchors;
+		boxAnchors.min = { 0, 0.6 };
+		boxAnchors.max = { 1, 1 };
+		glm::vec2 boxPivots = { 0, 0 };
+		VTA_UI::FlatMesh::Builder flatMeshBuilder2;
+		flatMeshBuilder2.makeSimpleMesh(VTA_UI::FlatMesh::Rectangle, 1, 1, boxPivots, glm::vec4(0.5, 0.5, 0.5, 1));
+		std::shared_ptr<VTA_UI::FlatMesh> boxWidgetMesh = std::make_shared<VTA_UI::FlatMesh>(device, flatMeshBuilder2);
+		std::shared_ptr<VTA_UI::VTAWidget> boxWidget = VTA_UI::VTAWidget::create();
+		boxWidget->model = boxWidgetMesh;
+		boxWidget->rectTransform.anchors = boxAnchors;
+		
+
+
+		VTA_UI::Anchors innerBoxAnchors;
+		innerBoxAnchors.min = { 0.5, 0.5 };
+		innerBoxAnchors.max = { 1, 1 };
+		VTA_UI::FlatMesh::Builder flatMeshBuilder3;
+		flatMeshBuilder3.makeSimpleMesh(VTA_UI::FlatMesh::Rectangle, 1, 1, boxPivots, glm::vec4(0, 1, 0, 1));
+		std::shared_ptr<VTA_UI::FlatMesh> innerWidgetMesh = std::make_shared<VTA_UI::FlatMesh>(device, flatMeshBuilder3);
+		std::shared_ptr<VTA_UI::VTAWidget> innerWidget = VTA_UI::VTAWidget::create();
+		innerWidget->model = innerWidgetMesh;
+		innerWidget->rectTransform.anchors = innerBoxAnchors;
+		
+
+
 		VTA_UI::FlatMesh::Builder flatMeshBuilder;
-		flatMeshBuilder.makeTextMesh("Test", *fontAtlas);
-		std::shared_ptr<VTA_UI::FlatMesh> testWidgetMesh = std::make_shared<VTA_UI::FlatMesh>(device, flatMeshBuilder);
-		std::shared_ptr<VTA_UI::VTAWidget> testWidget = VTA_UI::VTAWidget::create();
-		testWidget->model = testWidgetMesh;
+		glm::vec2 pivots = { 0, 0 };
+		flatMeshBuilder.makeTextMesh("Model1,   Model2", *fontAtlas, pivots, {0, 0, 0, 1});
+		std::shared_ptr<VTA_UI::FlatMesh> textWidgetMesh = std::make_shared<VTA_UI::FlatMesh>(device, flatMeshBuilder);
+		VTA_UI::Anchors textAnchors;
+		textAnchors.min = { 0.5, 0.5 };
+		textAnchors.max = { 0.5, 0.5 };
+		textAnchors.size = { 1, 1}; // used as scale
+		std::shared_ptr<VTA_UI::VTAWidget> textWidget = VTA_UI::VTAWidget::create();
+		textWidget->model = textWidgetMesh;
+		textWidget->rectTransform.anchors = textAnchors;
+		textWidget->rectTransform.pivots = pivots;
 
-		testWidget->rectTransform.translation = { 0.f, 0.f, 0.5f };
 
-		widgets.push_back(std::move(testWidget));
+		innerWidget->AddChild(std::move(textWidget));
+		boxWidget->AddChild(std::move(innerWidget));
+		widgets.push_back(std::move(boxWidget));
 	}
 
 	void AppControl::loadGameObjects()
@@ -245,13 +303,13 @@ namespace VTA
 		
 
 		std::vector<glm::vec3> lightColors{
-		{1.f, 1.f, 1.f}
-		 /*{1.f, .1f, .1f},
+		{1.f, 1.f, 1.f},
+		 {1.f, .1f, .1f},
 		 {.1f, .1f, 1.f},
 		 {.1f, 1.f, .1f},
 		 {1.f, 1.f, .1f},
 		 {.1f, 1.f, 1.f},
-		 {1.f, 1.f, 1.f}  */};
+		 {1.f, 1.f, 1.f}  };
 
 		for (int i = 0; i < lightColors.size(); i++)
 		{
@@ -280,7 +338,7 @@ namespace VTA
 		float atlasHeight = 256;
 		
 
-		fontAtlas = new Trex::Atlas(fontPathStr.c_str(), 14, Trex::Charset::Ascii());
+		fontAtlas = new Trex::Atlas(fontPathStr.c_str(), 18, Trex::Charset::Ascii(), Trex::RenderMode::DEFAULT, 2);
 	}
 
    

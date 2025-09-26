@@ -30,6 +30,7 @@ namespace VTA_UI
 		{
 			glm::vec3 position;
 			glm::vec2 uv;
+			glm::vec4 color;
 
 
 			bool operator==(const Vertex& other) const
@@ -44,10 +45,12 @@ namespace VTA_UI
 		struct Builder
 		{
 			std::vector<Vertex> vertices{};
-			
+			bool isTextMesh;
+			glm::vec2 textMeshDims;
 
-			void makeSimpleMesh(E_MeshShapes shape, float width, float height);
-			void makeTextMesh(const char* utf8, const Trex::Atlas& atlas);
+			void makeSimpleMesh(E_MeshShapes shape, float width, float height, glm::vec2 pivot, glm::vec4 color);
+			void makeTextMesh(const char* utf8, const Trex::Atlas& atlas, glm::vec2 pivots, glm::vec4 textColor);
+			glm::vec2 getTextMeshDimensions() { return textMeshDims; };
 		};
 
 		bool isTextMesh;

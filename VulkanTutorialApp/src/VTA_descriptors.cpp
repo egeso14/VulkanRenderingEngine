@@ -57,6 +57,12 @@ namespace VTA {
 
     // *************** Descriptor Pool *********************
 
+    VTADescriptorAllocatorGrowable::~VTADescriptorAllocatorGrowable()
+    {
+        
+    }
+
+
     VkDescriptorPool VTADescriptorAllocatorGrowable::get_pool(VkDevice device)
     {
         VkDescriptorPool newPool;
@@ -103,6 +109,7 @@ namespace VTA {
 
     void VTADescriptorAllocatorGrowable::init(VkDevice device, uint32_t maxSets, std::span<PoolSizeRatio> poolRatios)
     {
+        
         ratios.clear();
 
         for (auto r : poolRatios) {

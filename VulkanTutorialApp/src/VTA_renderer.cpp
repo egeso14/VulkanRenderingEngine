@@ -110,7 +110,7 @@ namespace VTA
 		}
 
 		isFrameStarted = false; // we are no longer in a frame
-		currentFrameIndex = (currentFrameIndex + 1) % VTASwapChain::MAX_FRAMES_IN_FLIGHT; 
+		//currentFrameIndex = (currentFrameIndex + 1) % VTASwapChain::MAX_FRAMES_IN_FLIGHT; 
 	}
 
 	void VTARenderer::beginSwapChainRenderPass1(VkCommandBuffer commandBuffer)

@@ -9,7 +9,6 @@ namespace VTA_UI
 	{
 		glm::mat4 modelMatrix{ 1.f };
 		glm::mat4 projectionMatrix{ 1.f };
-		alignas(16) glm::vec4 color;
 	};
 
 	EditorUIRenderSystem::EditorUIRenderSystem(VTA::VTADevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : device {device}
@@ -75,43 +74,77 @@ namespace VTA_UI
 
 		assert(shapePipelineLayout != nullptr && textPipelineLayout != nullptr && "Pipeline layout must be created before creating the pipeline.");
 
-		/*
+		
 		VTA::PipelineConfigInfo shapePipelineConfig{};
 		VTA::VTAPipeline::defaultPipelineConfigInfo(shapePipelineConfig, VK_SAMPLE_COUNT_1_BIT);
+		shapePipelineConfig.bindingDescription = FlatMesh::Vertex::getBindingDescriptions();
+		shapePipelineConfig.attributeDescriptions = FlatMesh::Vertex::getAttributeDescriptions();
 		shapePipelineConfig.renderPass = uiRenderPass;
 		shapePipelineConfig.pipelineLayout = shapePipelineLayout;
-		shapePipeline = std::make_unique<VTA::VTAPipeline>(device, "simple_shader.vert.spv", "simple_shader.frag.spv", shapePipelineConfig);*/
+		shapePipeline = std::make_unique<VTA::VTAPipeline>(device, "../shaders/shape_shader.vert.spv", "../shaders/shape_shader.frag.spv", shapePipelineConfig);
 
 		VTA::PipelineConfigInfo textPipelineConfig{};
 		VTA::VTAPipeline::defaultPipelineConfigInfo(textPipelineConfig, VK_SAMPLE_COUNT_1_BIT);
+		// set color blend info here because we want alpha blending anti-aliasing
+		textPipelineConfig.colorBlendAttachment.colorWriteMask =
+			VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+			VK_COLOR_COMPONENT_A_BIT;
+		textPipelineConfig.colorBlendAttachment.blendEnable = VK_TRUE;
+		textPipelineConfig.colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;   // Optional
+		textPipelineConfig.colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;  // Optional
+		textPipelineConfig.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;              // Optional
+		textPipelineConfig.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;   // Optional
+		textPipelineConfig.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;  // Optional
+		textPipelineConfig.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;              // Optional
+
+		textPipelineConfig.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+		textPipelineConfig.colorBlendInfo.logicOpEnable = VK_FALSE;
+		textPipelineConfig.colorBlendInfo.logicOp = VK_LOGIC_OP_COPY;  // Optional
+		textPipelineConfig.colorBlendInfo.attachmentCount = 1;
+
+		textPipelineConfig.colorBlendInfo.pAttachments = &textPipelineConfig.colorBlendAttachment;
+		textPipelineConfig.colorBlendInfo.blendConstants[0] = 0.0f;  // Optional
+		textPipelineConfig.colorBlendInfo.blendConstants[1] = 0.0f;  // Optional
+		textPipelineConfig.colorBlendInfo.blendConstants[2] = 0.0f;  // Optional
+		textPipelineConfig.colorBlendInfo.blendConstants[3] = 0.0f;  // Optional
+
+		
+		textPipelineConfig.bindingDescription = FlatMesh::Vertex::getBindingDescriptions();
+		textPipelineConfig.attributeDescriptions = FlatMesh::Vertex::getAttributeDescriptions();
 		textPipelineConfig.renderPass = uiRenderPass;
 		textPipelineConfig.pipelineLayout = textPipelineLayout;
-		textPipeline = std::make_unique<VTA::VTAPipeline>(device, "text_shader.vert.spv", "text_shader.frag.spv", textPipelineConfig);
+		textPipeline = std::make_unique<VTA::VTAPipeline>(device, "../shaders/text_shader.vert.spv", "../shaders/text_shader.frag.spv", textPipelineConfig);
 	}
 
 	void EditorUIRenderSystem::renderWidgets(FrameInfo_EditorUI frameInfo)
 	{
 		// let's experiment with binding pipelines dynamically depending on the type of the widget object to see the cost of doing so
 		
-		auto& allWidgets = VTAWidget::getWidgetMap();
 		auto& topLevelWidgets = VTAWidget::getTopLevelWidgets();
-
+		
+		
 		for (auto& topLevelWidget : topLevelWidgets)
 		{
-			VTAWidget::UiGraphNode topLevelNode = topLevelWidget->CreateUiGraph(glm::mat4(1.0f));
-			std::deque<VTAWidget::UiGraphNode> next(topLevelNode.children.begin(), topLevelNode.children.end());
+			
+			VTAWidget::UiGraphNode topLevelNode = topLevelWidget->createUiGraph(glm::vec2{ 0, 0 }, glm::vec2{ frameInfo.screenWidth, frameInfo.screenHeight });
+			std::deque<VTAWidget::UiGraphNode> next;
+			next.push_front(topLevelNode);
+
+			
+			// before we bind our model we need to possibly make adjustments to it due to the model being saved in pixel values 
+			// and pixel values are unstable when we want a widget to scale with the screen
+
 
 			while (!next.empty())
 			{
 				VTAWidget::UiGraphNode current = next.front();
 				next.pop_front();
+				VkPipelineLayout correctPipelineLayout;
 
 				if (current.isText)
 				{
 					textPipeline->bind(frameInfo.commandBuffer); // bind the pipeline to the command buffer
 
-					// if we are rendering text we need to bind the descriptor sets that have the font atlas
-					// does this get overwritten when we bind a pipeline that doesn't use descriptor sets/
 					vkCmdBindDescriptorSets
 					(frameInfo.commandBuffer,
 						VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -120,20 +153,30 @@ namespace VTA_UI
 						&frameInfo.uiDescriptorSet,
 						0,
 						nullptr);
+					correctPipelineLayout = textPipelineLayout;
 				}
 
 				else
 				{
-
 					shapePipeline->bind(frameInfo.commandBuffer);
+					correctPipelineLayout = shapePipelineLayout;
 				}
 
 				// bind the model and draw
+				UIPushConstantsData push{};
+				push.modelMatrix = current.modelMatrix;
+				push.projectionMatrix = current.widget->rectTransform.getProjection(frameInfo.screenWidth, frameInfo.screenHeight);
 
-				auto pair = allWidgets.find(topLevelNode.widgetId);
+				vkCmdPushConstants(frameInfo.commandBuffer,
+					correctPipelineLayout,
+					VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+					0,
+					sizeof(UIPushConstantsData),
+					&push);
 
-				pair->second->model->bind(frameInfo.commandBuffer);
-				pair->second->model->draw(frameInfo.commandBuffer);
+
+				current.widget->model->bind(frameInfo.commandBuffer);
+				current.widget->model->draw(frameInfo.commandBuffer);
 
 				for (auto child : current.children)
 				{

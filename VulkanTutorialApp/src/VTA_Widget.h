@@ -8,21 +8,39 @@
 
 namespace VTA_UI
 {
-	
+	// two types of anchors: single point and stretch
+	// in fractions of the screen dimensions
+	// coordinate system centered on top left of the screen
+	struct Anchors
+	{
+		glm::vec2 min;
+		glm::vec2 max;
+		glm::vec2 size;// if min and max are the same we use pixel sizes
+	};
+
+	struct Offsets
+	{
+		float top;
+		float left;
+		float bottom;
+		float right;
+	};
 
 	struct RectTransformComponent
 	{
-		glm::vec3 translation{};
+		glm::vec2 pivots;
+		Anchors anchors;
+		Offsets offsets;
 		glm::vec3 scale{ 1.f, 1.f, 1.f };
 		glm::vec3 rotation{};
 
-		glm::mat4 mat4();
+		glm::mat4 getModel(glm::vec2 parentMin, glm::vec2 parentMax, bool isText);
+		glm::mat4 getProjection(float screenWidth, float screenHeight);
 	};
 
 	class VTAWidget: public std::enable_shared_from_this<VTAWidget> {
 	public:
 		using id_t = unsigned int;
-		using Map = std::unordered_map<id_t, std::shared_ptr<VTAWidget>>;
 	private:
 		id_t id;
 		
@@ -32,7 +50,6 @@ namespace VTA_UI
 	public:
 		VTAWidget(id_t newId) { id = newId; }
 		inline static std::list<std::shared_ptr<VTAWidget>> topLevelWidgets{};
-		inline static Map allWidgets{};
 		glm::vec3 color{};
 		RectTransformComponent rectTransform{};
 		std::shared_ptr<FlatMesh> model;
@@ -43,10 +60,10 @@ namespace VTA_UI
 			bool isText;
 			glm::mat4 modelMatrix;
 			id_t widgetId;
+			std::shared_ptr<VTAWidget> widget; // find to have a ref here since it is temporary, maybe change it to a weak pointer??
 			std::vector<UiGraphNode> children;
 		};
 
-		static const Map& getWidgetMap() { return allWidgets; }
 		static const std::list<std::shared_ptr<VTAWidget>>& getTopLevelWidgets() { return topLevelWidgets; }
 
 		// delete copy constuctor and assignment operator because we want to avoid having duplicate game objects
@@ -64,7 +81,6 @@ namespace VTA_UI
 			auto sharedPointer = std::make_shared<VTAWidget>(current_id);
 
 			topLevelWidgets.push_back(sharedPointer);
-			allWidgets[current_id] = sharedPointer;
 
 			sharedPointer->isTopLevel = true;
 			sharedPointer->topLevelIterator = std::prev(topLevelWidgets.end());
@@ -90,14 +106,13 @@ namespace VTA_UI
 				topLevelWidgets.erase(widget->topLevelIterator);
 			}
 
-			allWidgets.erase(widget->id);
 
 		}
 
 
 		void AddChild(std::shared_ptr<VTAWidget> newChild)
 		{
-			if (newChild.use_count() > 1)
+			if (newChild.use_count() > 2)
 			{
 				throw std::runtime_error("other shared pointers exist to this object");
 			}
@@ -112,7 +127,7 @@ namespace VTA_UI
 			
 		}
 		
-		UiGraphNode CreateUiGraph(glm::mat4 parentTransform);
+		UiGraphNode createUiGraph(glm::vec2 parentMin, glm::vec2 parentMax);
 		id_t getId() { return id; }
 		
 		bool isTextWidget() { return model->isTextMesh; }

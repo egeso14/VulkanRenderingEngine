@@ -75,7 +75,7 @@ namespace VTA
 
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		pipeline = std::make_unique<VTAPipeline>(device, "point_light.vert.spv", "point_light.frag.spv", pipelineConfig);
+		pipeline = std::make_unique<VTAPipeline>(device, "../shaders/point_light.vert.spv", "../shaders/point_light.frag.spv", pipelineConfig);
 	}
 
 

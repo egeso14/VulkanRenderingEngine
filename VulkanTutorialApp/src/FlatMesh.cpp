@@ -27,6 +27,7 @@ namespace VTA_UI
 	FlatMesh::FlatMesh(VTA::VTADevice& device, const FlatMesh::Builder& builder) : device{ device }
 	{
 		createVertexBuffers(builder.vertices);
+		isTextMesh = builder.isTextMesh;
 		vertexCount = static_cast<uint32_t>(builder.vertices.size());
 	}
 
@@ -122,7 +123,8 @@ namespace VTA_UI
 		std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 
 		attributeDescriptions.push_back({ 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) });
-		attributeDescriptions.push_back({ 3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, uv) });
+		attributeDescriptions.push_back({ 1, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, uv) });
+		attributeDescriptions.push_back({ 2, 0, VK_FORMAT_R32G32B32A32_SFLOAT , offsetof(Vertex, color) });
 
 
 		/*attributeDescriptions[0].binding = 0; // binding number
@@ -138,12 +140,48 @@ namespace VTA_UI
 		return attributeDescriptions;
 	}
 
-	void FlatMesh::Builder::makeSimpleMesh(FlatMesh::E_MeshShapes shape, float width, float height)
+	void FlatMesh::Builder::makeSimpleMesh(
+		FlatMesh::E_MeshShapes shape, float width, float height, glm::vec2 pivot, glm::vec4 color)
 	{
-	}
-	void  FlatMesh::Builder::makeTextMesh(const char* utf8, const Trex::Atlas& fontAtlas)
-	{
+		isTextMesh = false;
+		switch (shape)
+		{
+		case FlatMesh::E_MeshShapes::Rectangle:
+			// 6 vertices for a rectangle
+			float x0 = 0;
+			float y0 = 0; //+ shapedGlyph.yOffset;   // yOff is typically negative
+			float x1 = x0 + width;
+			float y1 = y0 + height;
 
+			float u0 = x0;
+			float v0 = y0;
+			float u1 = 1;
+			float v1 = 1;
+
+			vertices.push_back({ {x0, y0, 0.f}, {u0, v0}, color});
+			vertices.push_back({ {x1, y0, 0.f}, {u1, v0 }, color });
+			vertices.push_back({ {x1, y1, 0.f}, {u1, v1}, color });
+			vertices.push_back({ {x0, y0, 0.f}, {u0, v0}, color });
+			vertices.push_back({ {x1, y1, 0.f}, {u1, v1}, color });
+			vertices.push_back({ {x0, y1, 0.f}, {u0, v1}, color });
+
+			// then pivot them
+
+			glm::vec3 pivotOffset = { pivot.x * width, -pivot.y * height, 0.f };
+
+			for (auto& vert : vertices)
+			{
+				vert.position = vert.position - pivotOffset;
+			}
+
+
+			
+			break;
+		}
+	}
+	void  FlatMesh::Builder::makeTextMesh(const char* utf8, const Trex::Atlas& fontAtlas, glm::vec2 pivot, glm::vec4 textColor)
+	{
+		isTextMesh = true;
 		// Re-init font for kerning (you could keep it around instead).
 		//stbtt_fontinfo font;
 		//stbtt_InitFont(&font, nullptr, 0); // <-- store fontData somewhere to use here
@@ -152,8 +190,10 @@ namespace VTA_UI
 		std::span<const char> view(utf8, std::strlen(utf8));
 		Trex::ShapedGlyphs shapedGlyphs = shaper.ShapeUtf8(view);
 		
+		
 
 		float penX = 0;
+		float textWidth = 0;
 		uint32_t prev = 0;
 
 		for (auto shapedGlyph : shapedGlyphs) {
@@ -161,29 +201,44 @@ namespace VTA_UI
 
 			auto g = shapedGlyph.info;
 			
-
+			
 			// stb's y is down; baselineY is where text sits (top-down coords)
-			float x0 = penX + shapedGlyph.xOffset;
-			float y0 = 0; //+ shapedGlyph.yOffset;   // yOff is typically negative
-			float x1 = x0 + g.width;
-			float y1 = y0 + g.height;
+			float x0 = penX + shapedGlyph.xOffset + g.bearingX;
+			float y0 = g.height - g.bearingY; //+ shapedGlyph.yOffset;   // yOff is typically negative
+			float x1 = x0 + g.width + g.bearingX;
+			float y1 = 0 - g.bearingY;
 			float atlasW = fontAtlas.GetBitmap().Width();
 			float atlasH = fontAtlas.GetBitmap().Height();
 
 			float u0 = g.x / atlasW;
-			float v0 = g.y / atlasH;
+			float v0 = (g.y + g.height) / atlasH; 
 			float u1 = (g.x + g.width) / atlasW;
-			float v1 = (g.y + g.height) / atlasH;
+			float v1 = (g.y) / atlasH;
 
 			// 2 triangles
-			vertices.push_back({ {x0, y0, 0}, {u0, v0} });
-			vertices.push_back({ {x1, y0, 0}, {u1, v0 } });
-			vertices.push_back({ {x1, y1, 0}, {u1, v1} });
-			vertices.push_back({ {x0, y0, 0}, {u0, v0} });
-			vertices.push_back({ {x1, y1, 0}, {u1, v1} });
-			vertices.push_back({ {x0, y1, 0}, {u0, v1}  });
+			vertices.push_back({ {x0, y0, 0.f}, {u0, v0}, textColor});
+			vertices.push_back({ {x1, y0, 0.f}, {u1, v0} , textColor });
+			vertices.push_back({ {x1, y1, 0.f}, {u1, v1}, textColor});
+			vertices.push_back({ {x0, y0, 0.f}, {u0, v0}, textColor});
+			vertices.push_back({ {x1, y1, 0.f}, {u1, v1}, textColor});
+			vertices.push_back({ {x0, y1, 0.f}, {u0, v1}, textColor });
 
 			penX += shapedGlyph.xAdvance; // move pen
+			textWidth += x1;
+		}
+
+		// now correct vertex coordinates wrt the pivot
+		
+		float fontHeight = fontAtlas.GetFont()->GetMetrics().height;
+		glm::vec3 pivotOffset = {pivot.x * textWidth, -pivot.y * fontHeight, 0.f};
+		glm::vec3 fontSize = { textWidth, fontHeight, 1 };
+		
+		textMeshDims = fontSize;
+
+		// let's try and make our model fit into our 0-1 coordinate space
+		for (auto& vert : vertices)
+		{
+			vert.position = (vert.position - pivotOffset) ;
 		}
 	
 	}

@@ -14,5 +14,7 @@ namespace VTA_UI {
 		float frameTime;
 		VkCommandBuffer commandBuffer;
 		VkDescriptorSet uiDescriptorSet;
+		float screenWidth;
+		float screenHeight;
 	};
 }
