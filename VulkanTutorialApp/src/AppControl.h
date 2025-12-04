@@ -7,7 +7,8 @@
 #include "VTA_game_object.h"
 #include "VTA_descriptors.h"
 #include "VTA_Widget.h"
-#include "Trex/Atlas.hpp"
+#include "EditorUI_module.h"
+#include "Game_module.h"
 
 #include <memory>
 #include <vector>
@@ -21,6 +22,7 @@ namespace VTA
 		static constexpr int WIDTH = 800;
 		static constexpr int HEIGHT = 600;
 
+		
 
 		AppControl();
 		~AppControl();
@@ -30,10 +32,6 @@ namespace VTA
 
 		void run();
 	private:
-
-		void loadWidgetObjects();
-		void loadGameObjects();
-		void createFontAtlas();
 
 		std::vector<VTADescriptorAllocatorGrowable> descriptorAllocators;
 		std::vector<VkDescriptorSet> globalDescriptorSets;
@@ -46,9 +44,6 @@ namespace VTA
 		VTARenderer renderer{ window, device };
 
 
-		
-		VTAGameObject::Map gameObjects;
-		std::vector<std::shared_ptr<VTA_UI::VTAWidget>> widgets;
 		
 	};
 }

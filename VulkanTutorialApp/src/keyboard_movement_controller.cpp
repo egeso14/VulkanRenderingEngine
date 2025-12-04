@@ -19,6 +19,8 @@ void VTA::KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt
 	gameObject.transform.rotation.x = glm::clamp(gameObject.transform.rotation.x, -1.5f, 1.5f);
 	gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y, glm::two_pi<float>());
 
+	float speed = 0.5;
+
 	float yaw = gameObject.transform.rotation.y;
 	const glm::vec3 forwardDirection{ sin(yaw), 0.f, cos(yaw) };
 	const glm::vec3 rightDirection{ forwardDirection.z, 0.f, -forwardDirection.x };
@@ -26,12 +28,12 @@ void VTA::KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt
 
 	glm::vec3 moveDir{ 0.f };
 
-	if (glfwGetKey(window, keys.moveForward) == GLFW_PRESS) moveDir += forwardDirection;
-	if (glfwGetKey(window, keys.moveBackward) == GLFW_PRESS) moveDir -= forwardDirection;
-	if (glfwGetKey(window, keys.moveLeft) == GLFW_PRESS) moveDir -= rightDirection;
-	if (glfwGetKey(window, keys.moveRight) == GLFW_PRESS) moveDir += rightDirection;
-	if (glfwGetKey(window, keys.moveDown) == GLFW_PRESS) moveDir -= upDirection;
-	if (glfwGetKey(window, keys.moveUp) == GLFW_PRESS) moveDir += upDirection;
+	if (glfwGetKey(window, keys.moveForward) == GLFW_PRESS) moveDir += forwardDirection * speed;
+	if (glfwGetKey(window, keys.moveBackward) == GLFW_PRESS) moveDir -= forwardDirection * speed;
+	if (glfwGetKey(window, keys.moveLeft) == GLFW_PRESS) moveDir -= rightDirection * speed;
+	if (glfwGetKey(window, keys.moveRight) == GLFW_PRESS) moveDir += rightDirection * speed;
+	if (glfwGetKey(window, keys.moveDown) == GLFW_PRESS) moveDir -= upDirection * speed;
+	if (glfwGetKey(window, keys.moveUp) == GLFW_PRESS) moveDir += upDirection * speed;
 
 	if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) // not a good idea to compare a float value directly with 0
 	{

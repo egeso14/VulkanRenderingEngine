@@ -2,143 +2,299 @@
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\AppControl.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\FlatMesh.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Core\Module.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_Widget.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Core\UUID.cpp">
+      <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_Window.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\EditorUI_module.cpp">
+      <Filter>src\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_buffer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\InspectionWindowController.cpp">
+      <Filter>src\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_camera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\Panels\InspectorPanel.cpp">
+      <Filter>src\Editor\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_descriptors.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\Panels\SceneHierarchyPanel.cpp">
+      <Filter>src\Editor\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_device.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\UIController.cpp">
+      <Filter>src\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_editor_ui_render_system.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\WidgetFactory.cpp">
+      <Filter>src\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_frame_info.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\Game_module.cpp">
+      <Filter>src\Game</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_game_object.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\Scene.cpp">
+      <Filter>src\Game</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_image.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\VTA_camera.cpp">
+      <Filter>src\Game</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_model.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\VTA_game_object.cpp">
+      <Filter>src\Game</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_pipeline.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\ImGui\ImGuiFonts.cpp">
+      <Filter>src\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_renderer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\ImGui\ImGuiModule.cpp">
+      <Filter>src\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_swap_chain.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\ImGui\ImGuiUtilities.cpp">
+      <Filter>src\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\RenderSystem.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\Resource.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_Window.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_buffer.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_descriptors.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_device.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_frame_info.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_image.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_model.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_pipeline.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_renderer.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_swap_chain.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\outline_render_system.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\point_light_system.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\simple_render_system.cpp">
+      <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\keyboard_movement_controller.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\point_light_system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\simple_render_system.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\src\stb_image_impl.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\backends\imgui_impl_glfw.cpp">
+      <Filter>lib\imgui-master\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\backends\imgui_impl_vulkan.cpp">
+      <Filter>lib\imgui-master\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imgui.cpp">
+      <Filter>lib\imgui-master</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imgui_demo.cpp">
+      <Filter>lib\imgui-master</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imgui_draw.cpp">
+      <Filter>lib\imgui-master</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imgui_tables.cpp">
+      <Filter>lib\imgui-master</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imgui_widgets.cpp">
+      <Filter>lib\imgui-master</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\AppControl.h">
-      <Filter>Header Files</Filter>
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\FlatMesh.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Core\Event.h">
+      <Filter>src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_Widget.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Core\Module.h">
+      <Filter>src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_Window.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Core\UUID.h">
+      <Filter>src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_buffer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\EditorUI_module.h">
+      <Filter>src\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_camera.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\InspectionWindowController.h">
+      <Filter>src\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_descriptors.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\Panels\InspectorPanel.h">
+      <Filter>src\Editor\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_device.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\Panels\SceneHierarchyPanel.h">
+      <Filter>src\Editor\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_editor_ui_render_system.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\SpatialUtilities.h">
+      <Filter>src\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_frame_info.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Editor\UIController.h">
+      <Filter>src\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_frame_info_editorui.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\Game_module.h">
+      <Filter>src\Game</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_game_object.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\Scene.h">
+      <Filter>src\Game</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_image.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\VTA_camera.h">
+      <Filter>src\Game</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_model.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Game\VTA_game_object.h">
+      <Filter>src\Game</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_pipeline.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\ImGui\Colors.h">
+      <Filter>src\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_renderer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\ImGui\ImGuiFonts.h">
+      <Filter>src\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_swap_chain.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\ImGui\ImGuiModule.h">
+      <Filter>src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\ImGui\ImGuiUtilities.h">
+      <Filter>src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Interfaces\I_UIGraphNode.h">
+      <Filter>src\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\RenderSystem.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\Resource.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_Window.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_buffer.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_descriptors.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_device.hpp">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_frame_info.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_image.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_model.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_pipeline.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_renderer.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\VTA_swap_chain.hpp">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\outline_render_system.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\point_light_system.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\Renderer\simple_render_system.h">
+      <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\VTA_utils.h">
-      <Filter>Header Files</Filter>
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\keyboard_movement_controller.h">
-      <Filter>Header Files</Filter>
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\point_light_system.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\backends\imgui_impl_glfw.h">
+      <Filter>lib\imgui-master\backends</Filter>
     </ClInclude>
-    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\src\simple_render_system.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\backends\imgui_impl_vulkan.h">
+      <Filter>lib\imgui-master\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imconfig.h">
+      <Filter>lib\imgui-master</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imgui.h">
+      <Filter>lib\imgui-master</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imgui_internal.h">
+      <Filter>lib\imgui-master</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imstb_rectpack.h">
+      <Filter>lib\imgui-master</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imstb_textedit.h">
+      <Filter>lib\imgui-master</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\VulkanLearning\VulkanTutorialApp\lib\imgui-master\imstb_truetype.h">
+      <Filter>lib\imgui-master</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{56CE4744-E334-3063-AC84-0A7F62C518E5}</UniqueIdentifier>
+    <Filter Include="lib">
+      <UniqueIdentifier>{328E82F8-5431-3001-8AB2-0D65C7835F76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{14D1ACE9-E219-3957-92D6-B9848DBF2610}</UniqueIdentifier>
+    <Filter Include="lib\imgui-master">
+      <UniqueIdentifier>{B1FF320A-299F-3BB8-98EA-5CC50999A4F5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\imgui-master\backends">
+      <UniqueIdentifier>{59E96DD3-9F25-33E3-8EAC-563B4B0DC81C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{451B5A0A-8847-3103-BA35-38390C340CAE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core">
+      <UniqueIdentifier>{8ACAA0CE-E2E7-376C-BEE4-779633F4175E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor">
+      <UniqueIdentifier>{60FB432C-EFAC-3229-9FDA-ED336CEFC93E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\Panels">
+      <UniqueIdentifier>{277F96FB-5539-3E30-A919-867AF2BD508E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Game">
+      <UniqueIdentifier>{60CBE1DE-BEAC-3BFA-91B1-6C93E246AF39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ImGui">
+      <UniqueIdentifier>{9996D2D1-FFE9-38EB-903D-46AECC04A5A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Interfaces">
+      <UniqueIdentifier>{25207814-9EDD-3CD2-82D1-B37DA6B485A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer">
+      <UniqueIdentifier>{A2D68C12-49D3-3447-9046-D3B5D9496194}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

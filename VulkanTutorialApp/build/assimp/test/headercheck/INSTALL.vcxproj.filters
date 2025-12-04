@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\841098e55bdf9ad25e1f480fa6d77ee6\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{C9101CC9-FFC2-35E2-884C-C0610A72D700}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

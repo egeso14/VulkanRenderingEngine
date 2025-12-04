@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\model_outline.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\model_outline.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
     <CustomBuild Include="D:\VulkanLearning\VulkanTutorialApp\build\CMakeFiles\2fd03d88745dad1ec198e059e939931e\point_light.frag.spv.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
